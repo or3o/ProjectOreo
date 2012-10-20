@@ -2,10 +2,10 @@ VERSION 5.00
 Begin VB.Form frmEditor_Item 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Item Editor"
-   ClientHeight    =   8415
+   ClientHeight    =   8400
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   9735
+   ClientWidth     =   9795
    ControlBox      =   0   'False
    BeginProperty Font 
       Name            =   "Verdana"
@@ -20,16 +20,16 @@ Begin VB.Form frmEditor_Item
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   561
+   ScaleHeight     =   560
    ScaleMode       =   3  'Pixel
-   ScaleWidth      =   649
+   ScaleWidth      =   653
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Visible         =   0   'False
    Begin VB.Frame Fraprojectile 
       Caption         =   "Projectiles"
       Height          =   1575
-      Left            =   3360
+      Left            =   3240
       TabIndex        =   131
       Top             =   6240
       Visible         =   0   'False
@@ -108,7 +108,7 @@ Begin VB.Form frmEditor_Item
       Begin VB.Label lblProjectileSpeed 
          Caption         =   "Speed:0"
          Height          =   255
-         Left            =   2640
+         Left            =   2520
          TabIndex        =   137
          Top             =   240
          Width           =   975
@@ -125,11 +125,11 @@ Begin VB.Form frmEditor_Item
    Begin VB.Frame Frarecipe 
       Caption         =   "Recipe"
       Height          =   3135
-      Left            =   3360
+      Left            =   3240
       TabIndex        =   118
-      Top             =   4800
+      Top             =   4680
       Visible         =   0   'False
-      Width           =   6375
+      Width           =   6495
       Begin VB.HScrollBar scrlEnchantReq 
          Height          =   255
          Left            =   4320
@@ -230,7 +230,7 @@ Begin VB.Form frmEditor_Item
       Begin VB.Label lblEnchants 
          Caption         =   "1"
          Height          =   255
-         Left            =   3120
+         Left            =   3840
          TabIndex        =   162
          Top             =   2280
          Width           =   1095
@@ -238,7 +238,7 @@ Begin VB.Form frmEditor_Item
       Begin VB.Label lblAlchemy 
          Caption         =   "1"
          Height          =   255
-         Left            =   3120
+         Left            =   3840
          TabIndex        =   159
          Top             =   1920
          Width           =   1095
@@ -246,7 +246,7 @@ Begin VB.Form frmEditor_Item
       Begin VB.Label lblSmith 
          Caption         =   "1"
          Height          =   255
-         Left            =   3120
+         Left            =   3840
          TabIndex        =   156
          Top             =   1560
          Width           =   1095
@@ -318,9 +318,9 @@ Begin VB.Form frmEditor_Item
       Width           =   6255
       Begin VB.HScrollBar ScrlDagPdoll 
          Height          =   255
-         Left            =   1560
+         Left            =   1680
          TabIndex        =   151
-         Top             =   2760
+         Top             =   2640
          Width           =   1095
       End
       Begin VB.CheckBox ChkDagger 
@@ -471,10 +471,10 @@ Begin VB.Form frmEditor_Item
       Begin VB.Label lblDagPdoll 
          Caption         =   "Pdoll"
          Height          =   255
-         Left            =   1560
+         Left            =   1680
          TabIndex        =   152
          Top             =   2400
-         Width           =   975
+         Width           =   1095
       End
       Begin VB.Label lblStatBonus 
          AutoSize        =   -1  'True
@@ -1570,7 +1570,7 @@ If ChkDagger.Value = 0 Then
 Item(EditorIndex).isDagger = False
 Else
 Item(EditorIndex).isDagger = True
-Item(EditorIndex).isTwoHanded = False
+Item(EditorIndex).isTwohanded = False
 chkTwoh.Value = 0
 End If
 
@@ -1700,7 +1700,7 @@ Private Sub chksw_Click()
     If options.Debug = 1 Then On Error GoTo errorhandler
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    Item(EditorIndex).Sword = chksw.Value
+    Item(EditorIndex).Swords = chksw.Value
     
     ' Error handler
     Exit Sub
@@ -1715,9 +1715,9 @@ Private Sub chkTwoh_Click()
 If options.Debug = 1 Then On Error GoTo errorhandler
 
 If chkTwoh.Value = 0 Then
-Item(EditorIndex).isTwoHanded = False
+Item(EditorIndex).isTwohanded = False
 Else
-Item(EditorIndex).isTwoHanded = True
+Item(EditorIndex).isTwohanded = True
 Item(EditorIndex).isDagger = False
 ChkDagger.Value = 0
 End If
@@ -2495,7 +2495,7 @@ Else
     Lblammo.Caption = "Weapon: None"
 End If
 
-Item(EditorIndex).Ammo = Scrolammo.Value
+Item(EditorIndex).ammo = Scrolammo.Value
 End Sub
 
 Private Sub txtcrftxp_Change()

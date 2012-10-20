@@ -363,9 +363,9 @@ Private Type ItemRec
     Data1 As Long
     Data2 As Long
     Data3 As Long
-    ClassReq As Long
-    AccessReq As Long
-    LevelReq As Long
+    ClassReq As Byte
+    AccessReq As Byte
+    LevelReq As Byte
     Mastery As Byte
     Price As Long
     Add_Stat(1 To Stats.Stat_Count - 1) As Byte
@@ -375,7 +375,7 @@ Private Type ItemRec
     BindType As Byte
     Stat_Req(1 To Stats.Stat_Count - 1) As Byte
     Animation As Long
-    Paperdoll As Long
+    Paperdoll As Integer
     
     AddHP As Long
     AddMP As Long
@@ -383,49 +383,49 @@ Private Type ItemRec
     CastSpell As Long
     instaCast As Byte
     ' Proficiencies
-    Sword As Long
-    SwordsReq As Long
-    Axes As Byte
-    AxesReq As Long
-    Daggers As Byte
-    daggersReq As Long
-    Range As Byte
-    RangeReq As Long
-    Magic As Byte
-    magicReq As Long
-    Conviction As Byte
-    convictionReq As Long
-    Lycanthropy As Byte
-    lycanthropyReq As Long
-    Heavyarmor As Byte
-    HeavyArmorReq As Long
-    LightArmor As Byte
-    LightarmorReq As Long
-    Mining As Byte
-    MiningReq As Long
-    Woodcutting As Byte
-    WoodcuttingReq As Long
-    Fishing As Byte
-    FishingReq As Long
-    Crafting As Byte
-    CraftingReq As Long
-    Smithy As Long
-    SmithReq As Long
-    Alchemist As Long
-    AlchemyReq As Long
-    Enchanter As Long
-    EnchantReq As Long
-    crftxp As Long
+    Swords As Boolean
+    SwordsReq As Byte
+    Axes As Boolean
+    AxesReq As Byte
+    Daggers As Boolean
+    daggersReq As Byte
+    Range As Boolean
+    RangeReq As Byte
+    Magic As Boolean
+    magicReq As Byte
+    Conviction As Boolean
+    convictionReq As Byte
+    Lycanthropy As Boolean
+    lycanthropyReq As Byte
+    Heavyarmor As Boolean
+    HeavyArmorReq As Byte
+    LightArmor As Boolean
+    LightarmorReq As Byte
+    Mining As Boolean
+    MiningReq As Byte
+    Woodcutting As Boolean
+    WoodcuttingReq As Byte
+    Fishing As Boolean
+    FishingReq As Byte
+    Crafting As Boolean
+    CraftingReq As Byte
+    Smithy As Boolean
+    SmithReq As Byte
+    Alchemist As Boolean
+    AlchemyReq As Byte
+    Enchanter As Boolean
+    EnchantReq As Byte
+    crftxp As Integer
     ProjecTile As ProjectileRec
-    Ammo As Long
-    ammoreq As Long
+    ammo As Byte
+    ammoreq As Boolean
     isDagger As Boolean
-    isTwoHanded As Boolean
-    Daggerpdoll As Long
+    isTwohanded As Boolean
+    Daggerpdoll As Integer
     Amount As Byte
-        'crafting
-    Tool As Long
-    ToolReq As Long
+    'crafting
+    Tool As Byte
+    ToolReq As Byte
     Recipe(1 To MAX_RECIPE_ITEMS) As Long
 End Type
 
@@ -620,7 +620,7 @@ Public Type MapSoundRec
     Y As Long
     SoundHandle As Long
     InUse As Boolean
-    channel As Long
+    Channel As Long
 End Type
 
 Public Type WeatherParticleRec
@@ -656,12 +656,3 @@ Public Type ChatBubbleRec
     timer As Long
     active As Boolean
 End Type
-
-' Mini Map Data
-Public MiniMapPlayer(1 To MAX_PLAYERS) As MiniMapPlayerRec
-
-Public Type MiniMapPlayerRec
-X As Long
-Y As Long
-End Type
-

@@ -35,6 +35,24 @@ Begin VB.Form frmMain
       Top             =   4200
       Visible         =   0   'False
       Width           =   3300
+      Begin VB.PictureBox Picture25 
+         Height          =   375
+         Left            =   1080
+         ScaleHeight     =   315
+         ScaleWidth      =   315
+         TabIndex        =   210
+         Top             =   3000
+         Width           =   375
+      End
+      Begin VB.PictureBox Picture24 
+         Height          =   375
+         Left            =   2520
+         ScaleHeight     =   315
+         ScaleWidth      =   435
+         TabIndex        =   209
+         Top             =   3000
+         Width           =   495
+      End
       Begin VB.PictureBox Picture23 
          Height          =   375
          Left            =   1680
@@ -2832,7 +2850,6 @@ Begin VB.Form frmMain
       _Version        =   393217
       BackColor       =   790032
       BorderStyle     =   0
-      Enabled         =   -1  'True
       ScrollBars      =   2
       Appearance      =   0
       TextRTF         =   $"frmMain.frx":2E18B
@@ -4740,6 +4757,53 @@ If lblSmithExp.Visible Then
  lblEnchantsExp.Visible = False
  lblAlchemyExp.Visible = False
  lblCraftingExp.Visible = False
+ End If
+End Sub
+
+Private Sub Picture24_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+lblEnchantsExp.Visible = True
+If lblEnchantsExp.Visible Then
+
+ lblswordsexp.Visible = False
+ lblAxesExp.Visible = False
+ lblDaggersExp.Visible = False
+ lblRangeExp.Visible = False
+ lblConvictionExp.Visible = False
+ lblMagicExp.Visible = False
+ lblLycanthropyExp.Visible = False
+ lblHeavyarmorExp.Visible = False
+ lblLightArmorExp.Visible = False
+ lblMiningExp.Visible = False
+ lblWoodcuttingExp.Visible = False
+ lblFishingExp.Visible = False
+ lblAlchemyExp.Visible = False
+ lblCraftingExp.Visible = False
+ lblSmithExp.Visible = False
+ End If
+End Sub
+
+
+
+Private Sub Picture25_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+lblAlchemyExp.Visible = True
+If lblAlchemyExp.Visible = True Then
+
+ lblswordsexp.Visible = False
+ lblAxesExp.Visible = False
+ lblDaggersExp.Visible = False
+ lblRangeExp.Visible = False
+ lblConvictionExp.Visible = False
+ lblMagicExp.Visible = False
+ lblLycanthropyExp.Visible = False
+ lblLightArmorExp.Visible = False
+ lblMiningExp.Visible = False
+ lblWoodcuttingExp.Visible = False
+ lblFishingExp.Visible = False
+ lblCraftingExp.Visible = False
+ lblHeavyarmorExp.Visible = False
+ lblEnchantsExp.Visible = False
+ lblSmithExp.Visible = False
+ 
  End If
 End Sub
 

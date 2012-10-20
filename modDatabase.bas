@@ -2218,7 +2218,6 @@ Sub SetPlayerX(ByVal Index As Long, ByVal X As Long)
 
     If Index > MAX_PLAYERS Then Exit Sub
     Player(Index).X = X
-    MiniMapPlayer(Index).X = X * 4
     ' Error handler
     Exit Sub
 errorhandler:
@@ -2248,7 +2247,6 @@ Sub SetPlayerY(ByVal Index As Long, ByVal Y As Long)
 
     If Index > MAX_PLAYERS Then Exit Sub
     Player(Index).Y = Y
-    MiniMapPlayer(Index).Y = Y * 4
     ' Error handler
     Exit Sub
 errorhandler:

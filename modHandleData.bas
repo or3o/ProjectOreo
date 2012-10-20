@@ -679,7 +679,7 @@ Dim TNEN As Long
 ' Proficiencies enchant
     SetPlayerEnchantsExp Index, Buffer.ReadLong
     TNEN = Buffer.ReadLong
-    frmMain.lblEnchantsExp.Caption = "Enchanting: " & GetPlayerEnchantsExp(Index) & "/" & TNEN
+    frmMain.lblEnchantsExp.Caption = "Cooking: " & GetPlayerEnchantsExp(Index) & "/" & TNEN
     ' Error handler
     Exit Sub
 errorhandler:

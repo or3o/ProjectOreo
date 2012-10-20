@@ -2032,7 +2032,7 @@ Case 1
 Case 2
 .Caption = "Smithy"
 Case 3
-.Caption = "Enchant"
+.Caption = "Cooking"
 End Select
 End With
 End Sub

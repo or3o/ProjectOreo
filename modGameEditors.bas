@@ -159,7 +159,7 @@ errorhandler:
 End Sub
 
 Public Sub MapEditorSetTile(ByVal X As Long, ByVal Y As Long, ByVal CurLayer As Long, Optional ByVal multitile As Boolean = False, Optional ByVal theAutotile As Byte = 0)
-Dim x2 As Long, y2 As Long
+Dim X2 As Long, Y2 As Long
 
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
@@ -188,24 +188,24 @@ Dim x2 As Long, y2 As Long
             CacheRenderState X, Y, CurLayer
         End With
     Else ' multitile
-        y2 = 0 ' starting tile for y axis
+        Y2 = 0 ' starting tile for y axis
         For Y = CurY To CurY + EditorTileHeight - 1
-            x2 = 0 ' re-set x count every y loop
+            X2 = 0 ' re-set x count every y loop
             For X = CurX To CurX + EditorTileWidth - 1
                 If X >= 0 And X <= Map.MaxX Then
                     If Y >= 0 And Y <= Map.MaxY Then
                         With Map.Tile(X, Y)
-                            .Layer(CurLayer).X = EditorTileX + x2
-                            .Layer(CurLayer).Y = EditorTileY + y2
+                            .Layer(CurLayer).X = EditorTileX + X2
+                            .Layer(CurLayer).Y = EditorTileY + Y2
                             .Layer(CurLayer).Tileset = frmEditor_Map.scrlTileSet.Value
                             .Autotile(CurLayer) = 0
                             CacheRenderState X, Y, CurLayer
                         End With
                     End If
                 End If
-                x2 = x2 + 1
+                X2 = X2 + 1
             Next
-            y2 = y2 + 1
+            Y2 = Y2 + 1
         Next
     End If
     
@@ -711,7 +711,7 @@ Dim CraftIndex As Long
         frmEditor_Item.cmbType.ListIndex = .Type
         frmEditor_Item.scrlAnim.Value = .Animation
         frmEditor_Item.txtDesc.text = Trim$(.Desc)
-        frmEditor_Item.Scrolammo.Value = Item(EditorIndex).Ammo
+        frmEditor_Item.Scrolammo.Value = Item(EditorIndex).ammo
         frmEditor_Item.ammoreq.Value = Item(EditorIndex).ammoreq
         frmEditor_Item.scrlAmount.Value = Item(EditorIndex).Amount
         ' find the sound we have set
@@ -747,7 +747,7 @@ Dim CraftIndex As Long
           frmEditor_Item.scrlProjectilePic.Value = .Pic
           frmEditor_Item.scrlProjectileRange.Value = .Range
           frmEditor_Item.scrlProjectileSpeed.Value = .speed
-           If Item(EditorIndex).isTwoHanded Then
+           If Item(EditorIndex).isTwohanded Then
               frmEditor_Item.chkTwoh.Value = 1
            Else
              frmEditor_Item.chkTwoh.Value = 0
@@ -804,37 +804,102 @@ End If
         frmEditor_Item.scrlLevelReq.Value = .LevelReq
                 ' Proficiencies
         frmEditor_Item.scrlswordreq.Value = .SwordsReq
-        frmEditor_Item.chksw = .Sword
+        If .Swords = True Then
+        frmEditor_Item.chksw = 1
+        Else
+        frmEditor_Item.chksw = 0
+        End If
         frmEditor_Item.scrlAxesReq.Value = .AxesReq
-        frmEditor_Item.chkAX = .Axes
+                If .Axes = True Then
+        frmEditor_Item.chkAX = 1
+        Else
+        frmEditor_Item.chkAX = 0
+        End If
         frmEditor_Item.scrldaggersreq.Value = .daggersReq
-        frmEditor_Item.chkda = .Daggers
+        If .Daggers = True Then
+        frmEditor_Item.chkda = 1
+        Else
+        frmEditor_Item.chkda = 0
+        End If
         frmEditor_Item.scrlrangereq.Value = .RangeReq
-        frmEditor_Item.chkra = .Range
+        If .Range = True Then
+        frmEditor_Item.chkra = 1
+        Else
+        frmEditor_Item.chkra = 0
+        End If
         frmEditor_Item.scrlmagicreq.Value = .magicReq
-        frmEditor_Item.chkma = .Magic
+        If .Magic = True Then
+         frmEditor_Item.chkma = 1
+        Else
+         frmEditor_Item.chkma = 0
+        End If
         frmEditor_Item.scrlconvictionreq.Value = .convictionReq
-        frmEditor_Item.chkco = .Conviction
+        If .Conviction = True Then
+         frmEditor_Item.chkco = 1
+        Else
+         frmEditor_Item.chkco = 0
+        End If
         frmEditor_Item.scrllycanthropyreq.Value = .lycanthropyReq
-        frmEditor_Item.chkly = .Lycanthropy
+        If .Lycanthropy = True Then
+          frmEditor_Item.chkly = 1
+        Else
+          frmEditor_Item.chkly = 0
+        End If
         frmEditor_Item.scrlheavyarmorreq.Value = .HeavyArmorReq
-        frmEditor_Item.chkha = .Heavyarmor
+        If .Heavyarmor = True Then
+          frmEditor_Item.chkha = 1
+        Else
+          frmEditor_Item.chkha = 0
+        End If
         frmEditor_Item.scrllightarmorreq.Value = .LightarmorReq
-        frmEditor_Item.chkla = .LightArmor
+        If .LightArmor = True Then
+          frmEditor_Item.chkla = 1
+        Else
+           frmEditor_Item.chkla = 0
+        End If
         frmEditor_Item.scrlminingreq.Value = .MiningReq
-        frmEditor_Item.chkmi = .Mining
+        If .Mining = True Then
+          frmEditor_Item.chkmi = 1
+        Else
+           frmEditor_Item.chkmi = 0
+        End If
         frmEditor_Item.scrlwoodcuttingreq.Value = .WoodcuttingReq
-        frmEditor_Item.chkwc = .Woodcutting
+        If .Woodcutting = True Then
+           frmEditor_Item.chkwc = 1
+        Else
+            frmEditor_Item.chkwc = 0
+        End If
         frmEditor_Item.scrlfishingreq.Value = .FishingReq
-        frmEditor_Item.chkfi = .Fishing
+        If .Fishing = True Then
+           frmEditor_Item.chkfi = 1
+        Else
+            frmEditor_Item.chkfi = 0
+        End If
         frmEditor_Item.scrlcraftingreq.Value = .CraftingReq
-        frmEditor_Item.chkcr = .Crafting
+        If .Crafting = True Then
+           frmEditor_Item.chkcr = 1
+        Else
+            frmEditor_Item.chkcr = 0
+        End If
         frmEditor_Item.scrlSmithReq.Value = .SmithReq
-        frmEditor_Item.chksm = .Smithy
+        If .Smithy = True Then
+           frmEditor_Item.chksm = 1
+        Else
+            frmEditor_Item.chksm = 0
+        End If
         frmEditor_Item.scrlAlchemyReq.Value = .AlchemyReq
-        frmEditor_Item.chkAL = .Alchemist
+        If .Alchemist = True Then
+           frmEditor_Item.chkAL = 1
+        Else
+            frmEditor_Item.chkAL = 0
+        End If
         frmEditor_Item.scrlEnchantReq.Value = .EnchantReq
-        frmEditor_Item.chkEN = .Enchanter
+         
+        If .Enchanter = True Then
+           frmEditor_Item.chkEN = 1
+        Else
+            frmEditor_Item.chkEN = 0
+        End If
         ' loop for stats
         For i = 1 To Stats.Stat_Count - 1
             frmEditor_Item.scrlStatReq(i).Value = .Stat_Req(i)
