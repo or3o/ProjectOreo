@@ -1,6 +1,7 @@
 Attribute VB_Name = "modGameLogic"
 Option Explicit
 
+
 Public Sub GameLoop()
 Dim FrameTime As Long
 Dim tick As Long
@@ -21,7 +22,7 @@ Dim renderTmr As Long
 
     ' *** Start GameLoop ***
     Do While InGame
-        tick = GetTickCount                            ' Set the inital tick
+        tick = timeGetTime                            ' Set the inital tick
         ElapsedTime = tick - FrameTime                 ' Set the time difference for time-based movement
         FrameTime = tick                               ' Set the time second loop time to the first.
 
@@ -59,7 +60,7 @@ Dim renderTmr As Long
             InGame = IsConnected
             Call CheckKeys ' Check to make sure they aren't trying to auto do anything
 
-            If GetForegroundWindow() = frmMain.hwnd Or GetForegroundWindow() = frmEditor_Events.hwnd Then
+            If GetForegroundWindow() = frmMain.hWnd Or GetForegroundWindow() = frmEditor_Events.hWnd Then
                 Call CheckInputKeys ' Check which keys were pressed
             End If
             
@@ -215,7 +216,7 @@ Dim renderTmr As Long
 
         ' Lock fps
         If Not FPS_Lock Then
-            Do While GetTickCount < tick + 15
+            Do While timeGetTime < tick + 15
                 DoEvents
                 Sleep 1
             Loop
@@ -382,9 +383,9 @@ Dim Buffer As New clsBuffer
     
     Set Buffer = New clsBuffer
 
-    If GetTickCount > Player(MyIndex).MapGetTimer + 250 Then
+    If timeGetTime > Player(MyIndex).MapGetTimer + 250 Then
         If Trim$(MyText) = vbNullString Then
-            Player(MyIndex).MapGetTimer = GetTickCount
+            Player(MyIndex).MapGetTimer = timeGetTime
             Buffer.WriteLong CMapGetItem
             SendData Buffer.ToArray()
         End If
@@ -424,7 +425,7 @@ Dim attackspeed As Long, X As Long, Y As Long, i As Long
                 Y = GetPlayerY(MyIndex)
         End Select
         
-        If GetTickCount > Player(MyIndex).EventTimer Then
+        If timeGetTime > Player(MyIndex).EventTimer Then
             For i = 1 To Map.CurrentEvents
                 If Map.MapEvents(i).Visible = 1 Then
                     If Map.MapEvents(i).X = X And Map.MapEvents(i).Y = Y Then
@@ -433,7 +434,7 @@ Dim attackspeed As Long, X As Long, Y As Long, i As Long
                         Buffer.WriteLong i
                         SendData Buffer.ToArray()
                         Set Buffer = Nothing
-                        Player(MyIndex).EventTimer = GetTickCount + 200
+                        Player(MyIndex).EventTimer = timeGetTime + 200
                     End If
                 End If
             Next
@@ -449,12 +450,12 @@ Dim attackspeed As Long, X As Long, Y As Long, i As Long
             attackspeed = 1000
         End If
 
-        If Player(MyIndex).AttackTimer + attackspeed < GetTickCount Then
+        If Player(MyIndex).AttackTimer + attackspeed < timeGetTime Then
             If Player(MyIndex).Attacking = 0 Then
 
                 With Player(MyIndex)
                     .Attacking = 1
-                    .AttackTimer = GetTickCount
+                    .AttackTimer = timeGetTime
                 End With
 
                 If GetPlayerEquipment(MyIndex, Weapon) > 0 Then
@@ -756,7 +757,7 @@ Dim i As Long
 
     ' Check to see if a npc is already on that tile
     For i = 1 To Npc_HighIndex
-        If MapNpc(i).num > 0 Then
+        If MapNpc(i).Num > 0 Then
             If MapNpc(i).X = X Then
                 If MapNpc(i).Y = Y Then
                     CheckDirection = True
@@ -969,7 +970,7 @@ Dim Buffer As clsBuffer
     End If
 
     If PlayerSpells(spellslot) > 0 Then
-        If GetTickCount > Player(MyIndex).AttackTimer + 1000 Then
+        If timeGetTime > Player(MyIndex).AttackTimer + 1000 Then
             If Player(MyIndex).Moving = 0 Then
                 Set Buffer = New clsBuffer
                 Buffer.WriteLong CCast
@@ -977,7 +978,7 @@ Dim Buffer As clsBuffer
                 SendData Buffer.ToArray()
                 Set Buffer = Nothing
                 SpellBuffer = spellslot
-                SpellBufferTimer = GetTickCount
+                SpellBufferTimer = timeGetTime
             Else
                 Call AddText("Cannot cast while walking!", BrightRed)
             End If
@@ -1460,7 +1461,7 @@ Dim i As Long
         .Message = Message
         .color = color
         .Type = MsgType
-        .Created = GetTickCount
+        .Created = timeGetTime
         .Scroll = 1
         .X = X
         .Y = Y
@@ -1544,7 +1545,7 @@ Dim lockindex As Long
             If AnimInstance(Index).LoopIndex(Layer) = 0 Then AnimInstance(Index).LoopIndex(Layer) = 1
             
             ' check if frame timer is set, and needs to have a frame change
-            If AnimInstance(Index).timer(Layer) + looptime <= GetTickCount Then
+            If AnimInstance(Index).timer(Layer) + looptime <= timeGetTime Then
                 ' check if out of range
                 If AnimInstance(Index).frameIndex(Layer) >= FrameCount Then
                     AnimInstance(Index).LoopIndex(Layer) = AnimInstance(Index).LoopIndex(Layer) + 1
@@ -1556,7 +1557,7 @@ Dim lockindex As Long
                 Else
                     AnimInstance(Index).frameIndex(Layer) = AnimInstance(Index).frameIndex(Layer) + 1
                 End If
-                AnimInstance(Index).timer(Layer) = GetTickCount
+                AnimInstance(Index).timer(Layer) = timeGetTime
             End If
         End If
     Next
@@ -1604,7 +1605,7 @@ Public Function GetBankItemNum(ByVal bankslot As Long) As Long
         Exit Function
     End If
     
-    GetBankItemNum = Bank.Item(bankslot).num
+    GetBankItemNum = Bank.Item(bankslot).Num
     
     ' Error handler
     Exit Function
@@ -1618,7 +1619,7 @@ Public Sub SetBankItemNum(ByVal bankslot As Long, ByVal itemnum As Long)
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
     
-    Bank.Item(bankslot).num = itemnum
+    Bank.Item(bankslot).Num = itemnum
     
     ' Error handler
     Exit Sub
@@ -1838,51 +1839,51 @@ Public Sub dialogueHandler(ByVal Index As Long)
     End If
 End Sub
 
-Sub ProcessEventMovement(ByVal id As Long)
+Sub ProcessEventMovement(ByVal ID As Long)
 
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
 
     ' Check if NPC is walking, and if so process moving them over
-    If Map.MapEvents(id).Moving = 1 Then
+    If Map.MapEvents(ID).Moving = 1 Then
         
-        Select Case Map.MapEvents(id).Dir
+        Select Case Map.MapEvents(ID).Dir
             Case DirectionUp
-                Map.MapEvents(id).yOffset = Map.MapEvents(id).yOffset - ((ElapsedTime / 1000) * (Map.MapEvents(id).MovementSpeed * SIZE_X))
-                If Map.MapEvents(id).yOffset < 0 Then Map.MapEvents(id).yOffset = 0
+                Map.MapEvents(ID).yOffset = Map.MapEvents(ID).yOffset - ((ElapsedTime / 1000) * (Map.MapEvents(ID).MovementSpeed * SIZE_X))
+                If Map.MapEvents(ID).yOffset < 0 Then Map.MapEvents(ID).yOffset = 0
                 
             Case DirectionDown
-                Map.MapEvents(id).yOffset = Map.MapEvents(id).yOffset + ((ElapsedTime / 1000) * (Map.MapEvents(id).MovementSpeed * SIZE_X))
-                If Map.MapEvents(id).yOffset > 0 Then Map.MapEvents(id).yOffset = 0
+                Map.MapEvents(ID).yOffset = Map.MapEvents(ID).yOffset + ((ElapsedTime / 1000) * (Map.MapEvents(ID).MovementSpeed * SIZE_X))
+                If Map.MapEvents(ID).yOffset > 0 Then Map.MapEvents(ID).yOffset = 0
                 
             Case DirectionLeft
-                Map.MapEvents(id).xOffset = Map.MapEvents(id).xOffset - ((ElapsedTime / 1000) * (Map.MapEvents(id).MovementSpeed * SIZE_X))
-                If Map.MapEvents(id).xOffset < 0 Then Map.MapEvents(id).xOffset = 0
+                Map.MapEvents(ID).xOffset = Map.MapEvents(ID).xOffset - ((ElapsedTime / 1000) * (Map.MapEvents(ID).MovementSpeed * SIZE_X))
+                If Map.MapEvents(ID).xOffset < 0 Then Map.MapEvents(ID).xOffset = 0
                 
             Case DirectionRight
-                Map.MapEvents(id).xOffset = Map.MapEvents(id).xOffset + ((ElapsedTime / 1000) * (Map.MapEvents(id).MovementSpeed * SIZE_X))
-                If Map.MapEvents(id).xOffset > 0 Then Map.MapEvents(id).xOffset = 0
+                Map.MapEvents(ID).xOffset = Map.MapEvents(ID).xOffset + ((ElapsedTime / 1000) * (Map.MapEvents(ID).MovementSpeed * SIZE_X))
+                If Map.MapEvents(ID).xOffset > 0 Then Map.MapEvents(ID).xOffset = 0
                 
         End Select
     
         ' Check if completed walking over to the next tile
-        If Map.MapEvents(id).Moving > 0 Then
-            If Map.MapEvents(id).Dir = DirectionRight Or Map.MapEvents(id).Dir = DirectionDown Then
-                If (Map.MapEvents(id).xOffset >= 0) And (Map.MapEvents(id).yOffset >= 0) Then
-                    Map.MapEvents(id).Moving = 0
-                    If Map.MapEvents(id).Step = 1 Then
-                        Map.MapEvents(id).Step = 3
+        If Map.MapEvents(ID).Moving > 0 Then
+            If Map.MapEvents(ID).Dir = DirectionRight Or Map.MapEvents(ID).Dir = DirectionDown Then
+                If (Map.MapEvents(ID).xOffset >= 0) And (Map.MapEvents(ID).yOffset >= 0) Then
+                    Map.MapEvents(ID).Moving = 0
+                    If Map.MapEvents(ID).Step = 1 Then
+                        Map.MapEvents(ID).Step = 3
                     Else
-                        Map.MapEvents(id).Step = 1
+                        Map.MapEvents(ID).Step = 1
                     End If
                 End If
             Else
-                If (Map.MapEvents(id).xOffset <= 0) And (Map.MapEvents(id).yOffset <= 0) Then
-                    Map.MapEvents(id).Moving = 0
-                    If Map.MapEvents(id).Step = 1 Then
-                        Map.MapEvents(id).Step = 3
+                If (Map.MapEvents(ID).xOffset <= 0) And (Map.MapEvents(ID).yOffset <= 0) Then
+                    Map.MapEvents(ID).Moving = 0
+                    If Map.MapEvents(ID).Step = 1 Then
+                        Map.MapEvents(ID).Step = 3
                     Else
-                        Map.MapEvents(id).Step = 1
+                        Map.MapEvents(ID).Step = 1
                     End If
                 End If
             End If
@@ -1951,7 +1952,7 @@ Sub ClearEventChat()
         
         frmMain.lblEventChat.Visible = False
         frmMain.lblEventChatContinue.Visible = False
-        EventChatTimer = GetTickCount + 100
+        EventChatTimer = timeGetTime + 100
     Else
         frmMain.picEventChat.Visible = False
     End If
@@ -2064,8 +2065,8 @@ Dim i As Long, Index As Long
         .targetType = targetType
         .Msg = Msg
         .colour = colour
-        .timer = GetTickCount
+        .timer = timeGetTime
+        
         .active = True
     End With
 End Sub
-

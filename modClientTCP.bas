@@ -50,15 +50,15 @@ Dim pLength As Long
     
     PlayerBuffer.WriteBytes Buffer()
     
-    If PlayerBuffer.length >= 4 Then pLength = PlayerBuffer.ReadLong(False)
-    Do While pLength > 0 And pLength <= PlayerBuffer.length - 4
-        If pLength <= PlayerBuffer.length - 4 Then
+    If PlayerBuffer.Length >= 4 Then pLength = PlayerBuffer.ReadLong(False)
+    Do While pLength > 0 And pLength <= PlayerBuffer.Length - 4
+        If pLength <= PlayerBuffer.Length - 4 Then
             PlayerBuffer.ReadLong
             HandleData PlayerBuffer.ReadBytes(pLength)
         End If
 
         pLength = 0
-        If PlayerBuffer.length >= 4 Then pLength = PlayerBuffer.ReadLong(False)
+        If PlayerBuffer.Length >= 4 Then pLength = PlayerBuffer.ReadLong(False)
     Loop
     PlayerBuffer.Trim
     DoEvents
@@ -83,14 +83,14 @@ Dim Wait As Long
         Exit Function
     End If
     
-    Wait = GetTickCount
+    Wait = timeGetTime
     frmMain.Socket.Close
     frmMain.Socket.Connect
     
     SetStatus "Connecting to server..."
     
     ' Wait until connected or 3 seconds have passed and report the server being down
-    Do While (Not IsConnected) And (GetTickCount <= Wait + 3000)
+    Do While (Not IsConnected) And (timeGetTime <= Wait + 3000)
         DoEvents
     Loop
     
@@ -137,7 +137,7 @@ errorhandler:
     Exit Function
 End Function
 
-Sub SendData(ByRef data() As Byte)
+Sub SendData(ByRef Data() As Byte)
 Dim Buffer As clsBuffer
     
     ' If debug mode, handle error then exit out
@@ -146,8 +146,8 @@ Dim Buffer As clsBuffer
     If IsConnected Then
         Set Buffer = New clsBuffer
                 
-        Buffer.WriteLong (UBound(data) - LBound(data)) + 1
-        Buffer.WriteBytes data()
+        Buffer.WriteLong (UBound(Data) - LBound(Data)) + 1
+        Buffer.WriteBytes Data()
         frmMain.Socket.SendData Buffer.ToArray()
     End If
     
@@ -172,6 +172,9 @@ Dim Buffer As clsBuffer
     Buffer.WriteLong CNewAccount
     Buffer.WriteString Name
     Buffer.WriteString Password
+    Buffer.WriteLong App.Major
+    Buffer.WriteLong App.Minor
+    Buffer.WriteLong App.Revision
     SendData Buffer.ToArray()
     Set Buffer = Nothing
     
@@ -1025,7 +1028,7 @@ Dim Buffer As clsBuffer
     
     ' do basic checks
     If InvNum < 1 Or InvNum > MAX_INV Then Exit Sub
-    If PlayerInv(InvNum).num < 1 Or PlayerInv(InvNum).num > MAX_ITEMS Then Exit Sub
+    If PlayerInv(InvNum).Num < 1 Or PlayerInv(InvNum).Num > MAX_ITEMS Then Exit Sub
     If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ItemCurrency Then
         If Amount < 1 Or Amount > PlayerInv(InvNum).Value Then Exit Sub
     End If
@@ -1262,7 +1265,7 @@ Dim Buffer As clsBuffer
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
     
-    PingStart = GetTickCount
+    PingStart = timeGetTime
     Set Buffer = New clsBuffer
     Buffer.WriteLong CCheckPing
     SendData Buffer.ToArray()

@@ -2,10 +2,10 @@ VERSION 5.00
 Begin VB.Form frmEditor_Item 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Item Editor"
-   ClientHeight    =   8400
+   ClientHeight    =   8460
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   9795
+   ClientWidth     =   10230
    ControlBox      =   0   'False
    BeginProperty Font 
       Name            =   "Verdana"
@@ -20,16 +20,16 @@ Begin VB.Form frmEditor_Item
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   560
+   ScaleHeight     =   564
    ScaleMode       =   3  'Pixel
-   ScaleWidth      =   653
+   ScaleWidth      =   682
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Visible         =   0   'False
    Begin VB.Frame Fraprojectile 
       Caption         =   "Projectiles"
       Height          =   1575
-      Left            =   3240
+      Left            =   3360
       TabIndex        =   131
       Top             =   6240
       Visible         =   0   'False
@@ -125,7 +125,7 @@ Begin VB.Form frmEditor_Item
    Begin VB.Frame Frarecipe 
       Caption         =   "Recipe"
       Height          =   3135
-      Left            =   3240
+      Left            =   3360
       TabIndex        =   118
       Top             =   4680
       Visible         =   0   'False

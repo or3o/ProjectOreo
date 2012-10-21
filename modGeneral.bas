@@ -1,14 +1,7 @@
 Attribute VB_Name = "modGeneral"
 Option Explicit
-
-' halts thread of execution
-Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
-
-' get system uptime in milliseconds
-Public Declare Function GetTickCount Lib "kernel32" () As Long
-
 'For Clear functions
-Public Declare Sub ZeroMemory Lib "kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal length As Long)
+Public Declare Sub ZeroMemory Lib "kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal Length As Long)
 
 Public Sub Main()
     ' If debug mode, handle error then exit out
@@ -565,73 +558,73 @@ Public Sub cacheButtons()
     
     ' menu - login
     With MenuButton(1)
-        .filename = "login"
+        .FileName = "login"
         .state = 0 ' normal
     End With
     
     ' menu - register
     With MenuButton(2)
-        .filename = "register"
+        .FileName = "register"
         .state = 0 ' normal
     End With
     
     ' menu - credits
     With MenuButton(3)
-        .filename = "credits"
+        .FileName = "credits"
         .state = 0 ' normal
     End With
     
     ' menu - exit
     With MenuButton(4)
-        .filename = "exit"
+        .FileName = "exit"
         .state = 0 ' normal
     End With
     
     ' main - inv
     With MainButton(1)
-        .filename = "inv"
+        .FileName = "inv"
         .state = 0 ' normal
     End With
     
     ' main - skills
     With MainButton(2)
-        .filename = "skills"
+        .FileName = "skills"
         .state = 0 ' normal
     End With
     
     ' main - char
     With MainButton(3)
-        .filename = "char"
+        .FileName = "char"
         .state = 0 ' normal
     End With
     
     ' main - opt
     With MainButton(4)
-        .filename = "opt"
+        .FileName = "opt"
         .state = 0 ' normal
     End With
     
     ' main - trade
     With MainButton(5)
-        .filename = "trade"
+        .FileName = "trade"
         .state = 0 ' normal
     End With
     
     ' main - party
     With MainButton(6)
-        .filename = "party"
+        .FileName = "party"
         .state = 0 ' normal
     End With
     
     ' main - quest
     With MainButton(7)
-        .filename = "quest"
+        .FileName = "quest"
         .state = 0 ' normal
     End With
     
     ' main - quest
     With MainButton(8)
-        .filename = "levels"
+        .FileName = "levels"
         .state = 0 ' normal
     End With
     
@@ -687,7 +680,7 @@ Dim bSuffix As String
     End Select
     
     ' render the button
-    frmMenu.imgButton(buttonNum).Picture = LoadPicture(App.Path & MENUBUTTON_PATH & MenuButton(buttonNum).filename & bSuffix & ".jpg")
+    frmMenu.imgButton(buttonNum).Picture = LoadPicture(App.Path & MENUBUTTON_PATH & MenuButton(buttonNum).FileName & bSuffix & ".jpg")
     
     ' Error handler
     Exit Sub
@@ -762,7 +755,7 @@ Dim bSuffix As String
     End Select
     
     ' render the button
-    frmMain.imgButton(buttonNum).Picture = LoadPicture(App.Path & MAINBUTTON_PATH & MainButton(buttonNum).filename & bSuffix & ".jpg")
+    frmMain.imgButton(buttonNum).Picture = LoadPicture(App.Path & MAINBUTTON_PATH & MainButton(buttonNum).FileName & bSuffix & ".jpg")
     
     ' Error handler
     Exit Sub

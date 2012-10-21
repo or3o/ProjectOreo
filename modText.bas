@@ -38,7 +38,7 @@ Public Sub RenderText(ByRef UseFont As CustomFont, ByVal text As String, ByVal X
 Dim TempVA(0 To 3)  As TLVERTEX
 Dim TempVAS(0 To 3) As TLVERTEX
 Dim TempStr() As String
-Dim count As Integer
+Dim Count As Integer
 Dim Ascii() As Byte
 Dim Row As Integer
 Dim u As Single
@@ -74,7 +74,7 @@ Dim yOffset As Single
     For i = 0 To UBound(TempStr)
         If Len(TempStr(i)) > 0 Then
             yOffset = i * UseFont.CharHeight
-            count = 0
+            Count = 0
             'Convert the characters to the ascii value
             Ascii() = StrConv(TempStr(i), vbFromUnicode)
             
@@ -84,9 +84,9 @@ Dim yOffset As Single
                 Call CopyMemory(TempVA(0), UseFont.HeaderInfo.CharVA(Ascii(j - 1)).Vertex(0), FVF_SIZE * 4)
                 
                 'Set up the verticies
-                TempVA(0).X = X + count
+                TempVA(0).X = X + Count
                 TempVA(0).Y = Y + yOffset
-                TempVA(1).X = TempVA(1).X + X + count
+                TempVA(1).X = TempVA(1).X + X + Count
                 TempVA(1).Y = TempVA(0).Y
                 TempVA(2).X = TempVA(0).X
                 TempVA(2).Y = TempVA(2).Y + TempVA(0).Y
@@ -103,7 +103,7 @@ Dim yOffset As Single
                 Call Direct3D_Device.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, TempVA(0), Len(TempVA(0)))
                 
                 'Shift over the the position to render the next character
-                count = count + UseFont.HeaderInfo.CharWidth(Ascii(j - 1))
+                Count = Count + UseFont.HeaderInfo.CharWidth(Ascii(j - 1))
                 
                 'Check to reset the color
                 If ResetColor Then
@@ -140,7 +140,7 @@ Sub UnloadFont(Font As CustomFont)
 End Sub
 
 
-Sub LoadFontHeader(ByRef theFont As CustomFont, ByVal filename As String)
+Sub LoadFontHeader(ByRef theFont As CustomFont, ByVal FileName As String)
 Dim FileNum As Byte
 Dim LoopChar As Long
 Dim Row As Single
@@ -150,7 +150,7 @@ Dim v As Single
 
     'Load the header information
     FileNum = FreeFile
-    Open App.Path & FONT_PATH & filename For Binary As #FileNum
+    Open App.Path & FONT_PATH & FileName For Binary As #FileNum
         Get #FileNum, , theFont.HeaderInfo
     Close #FileNum
     
@@ -320,7 +320,7 @@ Dim npcNum As Long
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
 
-    npcNum = MapNpc(Index).num
+    npcNum = MapNpc(Index).Num
 
     Select Case NPC(npcNum).Behaviour
         Case AIAttackOnSight
@@ -514,7 +514,7 @@ Sub DrawActionMsg(ByVal Index As Long)
     X = ConvertMapX(X)
     Y = ConvertMapY(Y)
 
-    If GetTickCount < ActionMsg(Index).Created + Time Then
+    If timeGetTime < ActionMsg(Index).Created + Time Then
         RenderText Font_Default, ActionMsg(Index).Message, X, Y, ActionMsg(Index).color, 0
     Else
         ClearActionMsg Index
@@ -667,7 +667,7 @@ Dim theArray() As String, X As Long, Y As Long, i As Long, MaxWidth As Long, x2 
             y2 = y2 + 12
         Next
         ' check if it's timed out - close it if so
-        If .timer + 5000 < GetTickCount Then
+        If .timer + 5000 < timeGetTime Then
             .active = False
         End If
     End With

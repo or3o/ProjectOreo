@@ -2,7 +2,7 @@ Attribute VB_Name = "modGameEditors"
 Option Explicit
 Public cpEvent As EventRec
 Const LB_SETHORIZONTALEXTENT = &H194
-Private Declare Function SendMessageByNum Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Private Declare Function SendMessageByNum Lib "user32" Alias "SendMessageA" (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 Public EventList() As EventListRec
 
 ' ////////////////
@@ -759,7 +759,7 @@ Dim CraftIndex As Long
             frmEditor_Item.lblDagPdoll.Visible = True
          Else
             frmEditor_Item.ChkDagger.Value = 0
-            frmEditor_Item.ScrlDagPdoll.Visible = False
+            frmEditor_Item.ScrlDagPdoll.Visible = True
             frmEditor_Item.lblDagPdoll.Visible = False
         End If
 
@@ -1560,6 +1560,7 @@ Dim SoundSet As Boolean
         .scrlAnim.Value = Spell(EditorIndex).SpellAnim
         .scrlStun.Value = Spell(EditorIndex).StunDuration
         .cmbBuffType.ListIndex = Spell(EditorIndex).BuffType
+        .scrlSprite.Value = Spell(EditorIndex).Sprite
         ' find the sound we have set
         If .cmbSound.ListCount >= 0 Then
             For i = 0 To .cmbSound.ListCount
@@ -1663,11 +1664,11 @@ End Sub
 'Event Editor Stuffz Also includes event functions from the map editor (copy/paste/delete)
 
 Sub CopyEvent_Map(X As Long, Y As Long)
-Dim count As Long, i As Long
-    count = Map.EventCount
-    If count = 0 Then Exit Sub
+Dim Count As Long, i As Long
+    Count = Map.EventCount
+    If Count = 0 Then Exit Sub
     
-    For i = 1 To count
+    For i = 1 To Count
         If Map.Events(i).X = X And Map.Events(i).Y = Y Then
             ' copy it
             'CopyMemory ByVal VarPtr(cpEvent), ByVal VarPtr(Map.Events(i)), LenB(Map.Events(i))
@@ -1679,11 +1680,11 @@ Dim count As Long, i As Long
 End Sub
 
 Sub PasteEvent_Map(X As Long, Y As Long)
-Dim count As Long, i As Long, eventNum As Long
-    count = Map.EventCount
+Dim Count As Long, i As Long, eventNum As Long
+    Count = Map.EventCount
     
-    If count > 0 Then
-        For i = 1 To count
+    If Count > 0 Then
+        For i = 1 To Count
             If Map.Events(i).X = X And Map.Events(i).Y = Y Then
                 ' already an event - paste over it
                 eventNum = i
@@ -1695,7 +1696,7 @@ Dim count As Long, i As Long, eventNum As Long
     If eventNum = 0 Then
         ' increment count
         AddEvent X, Y, True
-        eventNum = count + 1
+        eventNum = Count + 1
     End If
     
     ' copy it
@@ -1708,11 +1709,11 @@ Dim count As Long, i As Long, eventNum As Long
 End Sub
 
 Sub DeleteEvent(X As Long, Y As Long)
-Dim count As Long, i As Long, lowIndex As Long
+Dim Count As Long, i As Long, lowIndex As Long
     If Not InMapEditor Then Exit Sub
     If frmEditor_Events.Visible = True Then Exit Sub
-    count = Map.EventCount
-    For i = 1 To count
+    Count = Map.EventCount
+    For i = 1 To Count
         If Map.Events(i).X = X And Map.Events(i).Y = Y Then
             ' delete it
             ClearEvent i
@@ -1725,21 +1726,21 @@ Dim count As Long, i As Long, lowIndex As Long
     If lowIndex = 0 Then Exit Sub
     
     ' move everything down an index
-    For i = lowIndex To count - 1
+    For i = lowIndex To Count - 1
         CopyEvent i + 1, i
     Next
     ' delete the last index
-    ClearEvent count
+    ClearEvent Count
     ' set the new count
-    Map.EventCount = count - 1
+    Map.EventCount = Count - 1
 End Sub
 
 Sub AddEvent(X As Long, Y As Long, Optional ByVal cancelLoad As Boolean = False)
-Dim count As Long, pageCount As Long, i As Long
-    count = Map.EventCount + 1
+Dim Count As Long, pageCount As Long, i As Long
+    Count = Map.EventCount + 1
     ' make sure there's not already an event
-    If count - 1 > 0 Then
-        For i = 1 To count - 1
+    If Count - 1 > 0 Then
+        For i = 1 To Count - 1
             If Map.Events(i).X = X And Map.Events(i).Y = Y Then
                 ' already an event - edit it
                 If Not cancelLoad Then EventEditorInit i
@@ -1748,17 +1749,17 @@ Dim count As Long, pageCount As Long, i As Long
         Next
     End If
     ' increment count
-    Map.EventCount = count
-    ReDim Preserve Map.Events(0 To count)
+    Map.EventCount = Count
+    ReDim Preserve Map.Events(0 To Count)
     ' set the new event
-    Map.Events(count).X = X
-    Map.Events(count).Y = Y
+    Map.Events(Count).X = X
+    Map.Events(Count).Y = Y
     ' give it a new page
-    pageCount = Map.Events(count).pageCount + 1
-    Map.Events(count).pageCount = pageCount
-    ReDim Preserve Map.Events(count).Pages(pageCount)
+    pageCount = Map.Events(Count).pageCount + 1
+    Map.Events(Count).pageCount = pageCount
+    ReDim Preserve Map.Events(Count).Pages(pageCount)
     ' load the editor
-    If Not cancelLoad Then EventEditorInit count
+    If Not cancelLoad Then EventEditorInit Count
 End Sub
 
 Sub ClearEvent(eventNum As Long)
@@ -2354,7 +2355,7 @@ Static X As Long
     If X < frmEditor_Events.TextWidth(s & "  ") Then
        X = frmEditor_Events.TextWidth(s & "  ")
       If frmEditor_Events.ScaleMode = vbTwips Then X = X / Screen.TwipsPerPixelX ' if twips change to pixels
-      SendMessageByNum frmEditor_Events.lstCommands.hwnd, LB_SETHORIZONTALEXTENT, X, 0
+      SendMessageByNum frmEditor_Events.lstCommands.hWnd, LB_SETHORIZONTALEXTENT, X, 0
     End If
 End Sub
 

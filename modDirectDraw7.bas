@@ -123,7 +123,7 @@ Public Function InitDX8() As Boolean
     Direct3D_Window.BackBufferCount = 1 '1 backbuffer only
     Direct3D_Window.BackBufferWidth = 960 ' frmMain.picScreen.ScaleWidth 'Match the backbuffer width with the display width
     Direct3D_Window.BackBufferHeight = 768 'frmMain.picScreen.ScaleHeight 'Match the backbuffer height with the display height
-    Direct3D_Window.hDeviceWindow = frmMain.picScreen.hwnd 'Use frmMain as the device window.
+    Direct3D_Window.hDeviceWindow = frmMain.picScreen.hWnd 'Use frmMain as the device window.
     
     'we've already setup for Direct3D_Window.
     If TryCreateDirectX8Device = False Then
@@ -174,15 +174,15 @@ On Error GoTo nexti
     For i = 1 To 4
         Select Case i
             Case 1
-                Set Direct3D_Device = Direct3D.CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, frmMain.picScreen.hwnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, Direct3D_Window)
+                Set Direct3D_Device = Direct3D.CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, frmMain.picScreen.hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, Direct3D_Window)
                 TryCreateDirectX8Device = True
                 Exit Function
             Case 2
-                Set Direct3D_Device = Direct3D.CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, frmMain.picScreen.hwnd, D3DCREATE_MIXED_VERTEXPROCESSING, Direct3D_Window)
+                Set Direct3D_Device = Direct3D.CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, frmMain.picScreen.hWnd, D3DCREATE_MIXED_VERTEXPROCESSING, Direct3D_Window)
                 TryCreateDirectX8Device = True
                 Exit Function
             Case 3
-                Set Direct3D_Device = Direct3D.CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, frmMain.picScreen.hwnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, Direct3D_Window)
+                Set Direct3D_Device = Direct3D.CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, frmMain.picScreen.hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, Direct3D_Window)
                 TryCreateDirectX8Device = True
                 Exit Function
             Case 4
@@ -410,7 +410,7 @@ Public Sub RenderTexture(ByRef TextureRec As DX8TextureRec, ByVal dX As Single, 
           AddText "Loaded texture: " & TextureNum, White
           'Sleep 100
         End If
-  gTexture(TextureNum).timer = GetTickCount + SurfaceTimer
+  gTexture(TextureNum).timer = timeGetTime + SurfaceTimer
   
     sX = sX - 0.5
     sY = sY - 0.5
@@ -449,7 +449,7 @@ Public Sub RenderTextureByRects(TextureRec As DX8TextureRec, sRect As RECT, dRec
        AddText "Loaded texture: " & TextureNum, White
        'Sleep 100
     End If
-    gTexture(TextureNum).timer = GetTickCount + SurfaceTimer
+    gTexture(TextureNum).timer = timeGetTime + SurfaceTimer
     
     RenderTexture TextureRec, dRect.Left, dRect.Top, sRect.Left, sRect.Top, dRect.Right - dRect.Left, dRect.Bottom - dRect.Top, sRect.Right - sRect.Left, sRect.Bottom - sRect.Top, D3DColorRGBA(255, 255, 255, 255)
 
@@ -662,7 +662,7 @@ End Sub
 
 Public Sub DrawDoor(ByVal X As Long, ByVal Y As Long)
 Dim rec As RECT
-Dim X2 As Long, Y2 As Long
+Dim x2 As Long, y2 As Long
     
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
@@ -670,22 +670,22 @@ Dim X2 As Long, Y2 As Long
     ' sort out animation
     With TempTile(X, Y)
         If .DoorAnimate = 1 Then ' opening
-            If .DoorTimer + 100 < GetTickCount Then
+            If .DoorTimer + 100 < timeGetTime Then
                 If .DoorFrame < 4 Then
                     .DoorFrame = .DoorFrame + 1
                 Else
                     .DoorAnimate = 2 ' set to closing
                 End If
-                .DoorTimer = GetTickCount
+                .DoorTimer = timeGetTime
             End If
         ElseIf .DoorAnimate = 2 Then ' closing
-            If .DoorTimer + 100 < GetTickCount Then
+            If .DoorTimer + 100 < timeGetTime Then
                 If .DoorFrame > 1 Then
                     .DoorFrame = .DoorFrame - 1
                 Else
                     .DoorAnimate = 0 ' end animation
                 End If
-                .DoorTimer = GetTickCount
+                .DoorTimer = timeGetTime
             End If
         End If
         
@@ -699,9 +699,9 @@ Dim X2 As Long, Y2 As Long
         .Right = .Left + (Tex_Door.Width / 4)
     End With
 
-    X2 = (X * PIC_X)
-    Y2 = (Y * PIC_Y) - (Tex_Door.Height / 2) + 4
-    RenderTexture Tex_Door, ConvertMapX(X2), ConvertMapY(Y2), rec.Left, rec.Top, rec.Right - rec.Left, rec.Bottom - rec.Top, rec.Right - rec.Left, rec.Bottom - rec.Top, D3DColorRGBA(255, 255, 255, 255)
+    x2 = (X * PIC_X)
+    y2 = (Y * PIC_Y) - (Tex_Door.Height / 2) + 4
+    RenderTexture Tex_Door, ConvertMapX(x2), ConvertMapY(y2), rec.Left, rec.Top, rec.Right - rec.Left, rec.Bottom - rec.Top, rec.Right - rec.Left, rec.Bottom - rec.Top, D3DColorRGBA(255, 255, 255, 255)
     'Call DDS_BackBuffer.DrawFast(ConvertMapX(X2), ConvertMapY(Y2), DDS_Door, rec, DDDrawFAST_WAIT Or DDDrawFAST_SRCCOLORKEY)
     
     ' Error handler
@@ -722,7 +722,7 @@ Dim rec As RECT
     
     With Blood(Index)
         ' check if we should be seeing it
-        If .timer + 20000 < GetTickCount Then Exit Sub
+        If .timer + 20000 < timeGetTime Then Exit Sub
         
         rec.Top = 0
         rec.Bottom = PIC_Y
@@ -792,7 +792,7 @@ Dim lockindex As Long
             ' quick save the index
             lockindex = AnimInstance(Index).lockindex
             ' check if NPC exists
-            If MapNpc(lockindex).num > 0 Then
+            If MapNpc(lockindex).Num > 0 Then
                 ' check if alive
                 If MapNpc(lockindex).Vital(Vitals.HP) > 0 Then
                     ' exists, is alive, set x & y
@@ -861,7 +861,7 @@ Dim MaxFrames As Byte
     End If
     
     ' get the picture
-    PicNum = Item(MapItem(itemnum).num).Pic
+    PicNum = Item(MapItem(itemnum).Num).Pic
 
     If PicNum < 1 Or PicNum > numitems Then Exit Sub
 
@@ -998,7 +998,7 @@ Dim i As Long, npcNum As Long, partyIndex As Long
     
     ' render health bars
     For i = 1 To MAX_MAP_NPCS
-        npcNum = MapNpc(i).num
+        npcNum = MapNpc(i).Num
         ' exists?
         If npcNum > 0 Then
             ' alive?
@@ -1039,7 +1039,7 @@ Dim i As Long, npcNum As Long, partyIndex As Long
             tmpY = GetPlayerY(MyIndex) * PIC_Y + Player(MyIndex).yOffset + 35 + sHeight + 1
             
             ' calculate the width to fill
-            barWidth = (GetTickCount - SpellBufferTimer) / ((Spell(PlayerSpells(SpellBuffer)).CastTime * 1000)) * sWidth
+            barWidth = (timeGetTime - SpellBufferTimer) / ((Spell(PlayerSpells(SpellBuffer)).CastTime * 1000)) * sWidth
             
             ' draw bar background
             With sRect
@@ -1135,7 +1135,7 @@ errorhandler:
 End Sub
 
 Public Sub DrawHotbar()
-Dim sRect As RECT, dRect As RECT, i As Long, num As String, n As Long, destRect As D3DRECT
+Dim sRect As RECT, dRect As RECT, i As Long, Num As String, n As Long, destRect As D3DRECT
 
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
@@ -1152,8 +1152,8 @@ Dim sRect As RECT, dRect As RECT, i As Long, num As String, n As Long, destRect 
         With destRect
             .y1 = HotbarTop
             .x1 = HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
-            .Y2 = .y1 + 32
-            .X2 = .x1 + 32
+            .y2 = .y1 + 32
+            .x2 = .x1 + 32
         End With
         
         With sRect
@@ -1172,7 +1172,7 @@ Dim sRect As RECT, dRect As RECT, i As Long, num As String, n As Long, destRect 
                             Direct3D_Device.BeginScene
                             RenderTextureByRects Tex_Item(Item(Hotbar(i).Slot).Pic), sRect, dRect
                             Direct3D_Device.EndScene
-                            Direct3D_Device.Present destRect, destRect, frmMain.picHotbar.hwnd, ByVal (0)
+                            Direct3D_Device.Present destRect, destRect, frmMain.picHotbar.hWnd, ByVal (0)
                         End If
                     End If
                 End If
@@ -1200,15 +1200,15 @@ Dim sRect As RECT, dRect As RECT, i As Long, num As String, n As Long, destRect 
                             Direct3D_Device.BeginScene
                             RenderTextureByRects Tex_SpellIcon(Spell(Hotbar(i).Slot).Icon), sRect, dRect
                             Direct3D_Device.EndScene
-                            Direct3D_Device.Present destRect, destRect, frmMain.picHotbar.hwnd, ByVal (0)
+                            Direct3D_Device.Present destRect, destRect, frmMain.picHotbar.hWnd, ByVal (0)
                         End If
                     End If
                 End If
         End Select
         
         ' render the letters
-        num = "F" & str(i)
-        RenderText Font_Default, num, dRect.Left + 2, dRect.Top + 16, White, 0
+        Num = "F" & str(i)
+        RenderText Font_Default, Num, dRect.Left + 2, dRect.Top + 16, White, 0
     Next
     
     ' Error handler
@@ -1247,7 +1247,7 @@ Dim attackspeed As Long
     End If
     
     ' Check for attacking animation
-    If Player(Index).AttackTimer + (attackspeed / 2) > GetTickCount Then
+    If Player(Index).AttackTimer + (attackspeed / 2) > timeGetTime Then
         If Player(Index).Attacking = 1 Then
             anim = 3
         End If
@@ -1267,7 +1267,7 @@ Dim attackspeed As Long
 
     ' Check to see if we want to stop making him attack
     With Player(Index)
-        If .AttackTimer + attackspeed < GetTickCount Then
+        If .AttackTimer + attackspeed < timeGetTime Then
             .Attacking = 0
             .AttackTimer = 0
         End If
@@ -1306,7 +1306,9 @@ Dim attackspeed As Long
 
     ' render the actual sprite
     Call DrawSprite(Sprite, X, Y, rec)
-
+    If Player(MyIndex).Sprite > 2 Then
+     Exit Sub
+    End If
    If GetPlayerEquipment(Index, Shield) <> Player(Index).WieldDagger Then  'Get player daggers [ 1]
         If GetPlayerEquipment(Index, Armor) > 0 Then
              Call DrawPaperdoll(X, Y, Item(GetPlayerEquipment(Index, Armor)).Paperdoll, anim, spritetop)
@@ -1371,9 +1373,9 @@ Dim attackspeed As Long
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
 
-    If MapNpc(MapNpcNum).num = 0 Then Exit Sub ' no npc set
+    If MapNpc(MapNpcNum).Num = 0 Then Exit Sub ' no npc set
     
-    Sprite = NPC(MapNpc(MapNpcNum).num).Sprite
+    Sprite = NPC(MapNpc(MapNpcNum).Num).Sprite
 
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
 
@@ -1382,7 +1384,7 @@ Dim attackspeed As Long
     ' Reset frame
     anim = 0
     ' Check for attacking animation
-    If MapNpc(MapNpcNum).AttackTimer + (attackspeed / 2) > GetTickCount Then
+    If MapNpc(MapNpcNum).AttackTimer + (attackspeed / 2) > timeGetTime Then
         If MapNpc(MapNpcNum).Attacking = 1 Then
             anim = 3
         End If
@@ -1402,7 +1404,7 @@ Dim attackspeed As Long
 
     ' Check to see if we want to stop making him attack
     With MapNpc(MapNpcNum)
-        If .AttackTimer + attackspeed < GetTickCount Then
+        If .AttackTimer + attackspeed < timeGetTime Then
             .Attacking = 0
             .AttackTimer = 0
         End If
@@ -1449,7 +1451,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DrawPaperdoll(ByVal X2 As Long, ByVal Y2 As Long, ByVal Sprite As Long, ByVal anim As Long, ByVal spritetop As Long)
+Public Sub DrawPaperdoll(ByVal x2 As Long, ByVal y2 As Long, ByVal Sprite As Long, ByVal anim As Long, ByVal spritetop As Long)
 Dim rec As RECT
 Dim X As Long, Y As Long
 Dim Width As Long, Height As Long
@@ -1467,8 +1469,8 @@ Dim Width As Long, Height As Long
     End With
     
     ' clipping
-    X = ConvertMapX(X2)
-    Y = ConvertMapY(Y2)
+    X = ConvertMapX(x2)
+    Y = ConvertMapY(y2)
     Width = (rec.Right - rec.Left)
     Height = (rec.Bottom - rec.Top)
 
@@ -1497,7 +1499,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub DrawSprite(ByVal Sprite As Long, ByVal X2 As Long, Y2 As Long, rec As RECT)
+Private Sub DrawSprite(ByVal Sprite As Long, ByVal x2 As Long, y2 As Long, rec As RECT)
 Dim X As Long
 Dim Y As Long
 Dim Width As Long
@@ -1507,8 +1509,8 @@ Dim Height As Long
     If options.Debug = 1 Then On Error GoTo errorhandler
 
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
-    X = ConvertMapX(X2)
-    Y = ConvertMapY(Y2)
+    X = ConvertMapX(x2)
+    Y = ConvertMapY(y2)
     Width = (rec.Right - rec.Left)
     Height = (rec.Bottom - rec.Top)
     ' render player shadow
@@ -1594,8 +1596,8 @@ Dim rec As RECT, rec_pos As RECT
     ' check for map animation changes#
     For i = 1 To MAX_MAP_ITEMS
 
-        If MapItem(i).num > 0 Then
-            itempic = Item(MapItem(i).num).Pic
+        If MapItem(i).Num > 0 Then
+            itempic = Item(MapItem(i).Num).Pic
 
             If itempic < 1 Or itempic > numitems Then Exit Sub
             MaxFrames = (Tex_Item(itempic).Width / 2) / 32 ' Work out how many frames there are. /2 because of inventory icons as well as ingame
@@ -1702,12 +1704,12 @@ Dim rec As RECT, rec_pos As RECT, faceNum As Long, srcRect As D3DRECT
     RenderTextureByRects Tex_Face(faceNum), rec, rec_pos
     With srcRect
         .x1 = 0
-        .X2 = frmMain.picFace.Width
+        .x2 = frmMain.picFace.Width
         .y1 = 0
-        .Y2 = frmMain.picFace.Height
+        .y2 = frmMain.picFace.Height
     End With
     Direct3D_Device.EndScene
-    Direct3D_Device.Present srcRect, srcRect, frmMain.picFace.hwnd, ByVal (0)
+    Direct3D_Device.Present srcRect, srcRect, frmMain.picFace.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -1740,23 +1742,23 @@ Dim rec As RECT, rec_pos As RECT, srcRect As D3DRECT, destRect As D3DRECT
                 .Right = 64
             End With
 
-            With rec_pos
-                .Top = EqTop + ((EqOffsetY + 32) * ((i - 1) \ EqColumns))
-                .Bottom = .Top + PIC_Y
-                .Left = EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
-                .Right = .Left + PIC_X
-            End With
+                With rec_pos
+                                .Top = EqTop
+                                .Bottom = .Top + PIC_Y
+                                .Left = EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
+                                .Right = .Left + PIC_X
+                        End With
             Direct3D_Device.Clear 0, ByVal 0, D3DCLEAR_TARGET, D3DColorRGBA(0, 0, 0, 0), 1#, 0
             Direct3D_Device.BeginScene
             RenderTextureByRects Tex_Item(itempic), rec, rec_pos
             Direct3D_Device.EndScene
             With srcRect
                 .x1 = rec_pos.Left
-                .X2 = rec_pos.Right
+                .x2 = rec_pos.Right
                 .y1 = rec_pos.Top
-                .Y2 = rec_pos.Bottom
+                .y2 = rec_pos.Bottom
             End With
-            Direct3D_Device.Present srcRect, srcRect, frmMain.picCharacter.hwnd, ByVal (0)
+            Direct3D_Device.Present srcRect, srcRect, frmMain.picCharacter.hWnd, ByVal (0)
         End If
     Next
     
@@ -1795,8 +1797,8 @@ Dim tmpItem As Long, amountModifier As Long
             ' exit out if we're offering item in a trade.
             If InTrade > 0 Then
                 For X = 1 To MAX_INV
-                    tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(X).num)
-                    If TradeYourOffer(X).num = i Then
+                    tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(X).Num)
+                    If TradeYourOffer(X).Num = i Then
                         ' check if currency
                         If Not Item(tmpItem).Type = ItemCurrency Then
                             ' normal item, exit out
@@ -1865,20 +1867,20 @@ NextLoop:
     
     With srcRect
         .x1 = 0
-        .X2 = frmMain.picInventory.Width
+        .x2 = frmMain.picInventory.Width
         .y1 = 28
-        .Y2 = frmMain.picInventory.Height + .y1
+        .y2 = frmMain.picInventory.Height + .y1
     End With
     
     With destRect
         .x1 = 0
-        .X2 = frmMain.picInventory.Width
+        .x2 = frmMain.picInventory.Width
         .y1 = 32
-        .Y2 = frmMain.picInventory.Height + .y1
+        .y2 = frmMain.picInventory.Height + .y1
     End With
     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present srcRect, destRect, frmMain.picInventory.hwnd, ByVal (0)
+    Direct3D_Device.Present srcRect, destRect, frmMain.picInventory.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -1903,7 +1905,7 @@ Dim colour As Long
     Direct3D_Device.BeginScene
     For i = 1 To MAX_INV
         ' Draw your own offer
-        itemnum = GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).num)
+        itemnum = GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).Num)
 
         If itemnum > 0 And itemnum <= MAX_ITEMS Then
             itempic = Item(itemnum).Pic
@@ -1948,27 +1950,27 @@ Dim colour As Long
     
     With srcRect
         .x1 = 0
-        .X2 = .x1 + 193
+        .x2 = .x1 + 193
         .y1 = 0
-        .Y2 = .y1 + 246
+        .y2 = .y1 + 246
     End With
                     
     With destRect
         .x1 = 0
-        .X2 = .x1 + 193
+        .x2 = .x1 + 193
         .y1 = 0
-        .Y2 = 246 + .y1
+        .y2 = 246 + .y1
     End With
                     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present srcRect, destRect, frmMain.picYourTrade.hwnd, ByVal (0)
+    Direct3D_Device.Present srcRect, destRect, frmMain.picYourTrade.hWnd, ByVal (0)
     
     
     Direct3D_Device.Clear 0, ByVal 0, D3DCLEAR_TARGET, D3DColorRGBA(0, 0, 0, 0), 1#, 0
     Direct3D_Device.BeginScene
     For i = 1 To MAX_INV
         ' Draw their offer
-        itemnum = TradeTheirOffer(i).num
+        itemnum = TradeTheirOffer(i).Num
 
         If itemnum > 0 And itemnum <= MAX_ITEMS Then
             itempic = Item(itemnum).Pic
@@ -2012,20 +2014,20 @@ Dim colour As Long
     
     With srcRect
         .x1 = 0
-        .X2 = .x1 + 193
+        .x2 = .x1 + 193
         .y1 = 0
-        .Y2 = .y1 + 246
+        .y2 = .y1 + 246
     End With
                     
     With destRect
         .x1 = 0
-        .X2 = .x1 + 193
+        .x2 = .x1 + 193
         .y1 = 0
-        .Y2 = 246 + .y1
+        .y2 = 246 + .y1
     End With
                     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present srcRect, destRect, frmMain.picTheirTrade.hwnd, ByVal (0)
+    Direct3D_Device.Present srcRect, destRect, frmMain.picTheirTrade.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2084,20 +2086,20 @@ Dim colour As Long
     
     With srcRect
         .x1 = 0
-        .X2 = frmMain.picSpells.Width
+        .x2 = frmMain.picSpells.Width
         .y1 = 28
-        .Y2 = frmMain.picSpells.Height + .y1
+        .y2 = frmMain.picSpells.Height + .y1
     End With
     
     With destRect
         .x1 = 0
-        .X2 = frmMain.picSpells.Width
+        .x2 = frmMain.picSpells.Width
         .y1 = 32
-        .Y2 = frmMain.picSpells.Height + .y1
+        .y2 = frmMain.picSpells.Height + .y1
     End With
     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present srcRect, destRect, frmMain.picSpells.hwnd, ByVal (0)
+    Direct3D_Device.Present srcRect, destRect, frmMain.picSpells.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2165,20 +2167,20 @@ Dim colour As Long
     
     With srcRect
         .x1 = ShopLeft
-        .X2 = .x1 + 192
+        .x2 = .x1 + 192
         .y1 = ShopTop
-        .Y2 = .y1 + 211
+        .y2 = .y1 + 211
     End With
                 
     With destRect
         .x1 = ShopLeft
-        .X2 = .x1 + 192
+        .x2 = .x1 + 192
         .y1 = ShopTop
-        .Y2 = 211 + .y1
+        .y2 = 211 + .y1
     End With
                 
     Direct3D_Device.EndScene
-    Direct3D_Device.Present srcRect, destRect, frmMain.picShopItems.hwnd, ByVal (0)
+    Direct3D_Device.Present srcRect, destRect, frmMain.picShopItems.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2229,18 +2231,18 @@ Dim itemnum As Long, itempic As Long
         End With
         With srcRect
             .x1 = 0
-            .X2 = 32
+            .x2 = 32
             .y1 = 0
-            .Y2 = 32
+            .y2 = 32
         End With
         With destRect
             .x1 = 2
             .y1 = 2
-            .Y2 = .y1 + 32
-            .X2 = .x1 + 32
+            .y2 = .y1 + 32
+            .x2 = .x1 + 32
         End With
         Direct3D_Device.EndScene
-        Direct3D_Device.Present srcRect, destRect, frmMain.picTempInv.hwnd, ByVal (0)
+        Direct3D_Device.Present srcRect, destRect, frmMain.picTempInv.hWnd, ByVal (0)
     End If
 
     ' Error handler
@@ -2293,18 +2295,18 @@ Dim spellnum As Long, spellpic As Long
         
         With srcRect
             .x1 = 0
-            .X2 = 32
+            .x2 = 32
             .y1 = 0
-            .Y2 = 32
+            .y2 = 32
         End With
         With destRect
             .x1 = 2
             .y1 = 2
-            .Y2 = .y1 + 32
-            .X2 = .x1 + 32
+            .y2 = .y1 + 32
+            .x2 = .x1 + 32
         End With
         Direct3D_Device.EndScene
-        Direct3D_Device.Present srcRect, destRect, frmMain.picTempSpell.hwnd, ByVal (0)
+        Direct3D_Device.Present srcRect, destRect, frmMain.picTempSpell.hWnd, ByVal (0)
     End If
     
     ' Error handler
@@ -2350,12 +2352,12 @@ Dim itempic As Long
         With destRect
             .x1 = 0
             .y1 = 0
-            .Y2 = 64
-            .X2 = 64
+            .y2 = 64
+            .x2 = 64
         End With
         
         Direct3D_Device.EndScene
-        Direct3D_Device.Present destRect, destRect, frmMain.picItemDescPic.hwnd, ByVal (0)
+        Direct3D_Device.Present destRect, destRect, frmMain.picItemDescPic.hWnd, ByVal (0)
     End If
 
     ' Error handler
@@ -2401,12 +2403,12 @@ Dim spellpic As Long
         With destRect
             .x1 = 0
             .y1 = 0
-            .Y2 = 64
-            .X2 = 64
+            .y2 = 64
+            .x2 = 64
         End With
         
         Direct3D_Device.EndScene
-        Direct3D_Device.Present destRect, destRect, frmMain.picSpellDescPic.hwnd, ByVal (0)
+        Direct3D_Device.Present destRect, destRect, frmMain.picSpellDescPic.hWnd, ByVal (0)
     End If
 
     ' Error handler
@@ -2480,31 +2482,31 @@ Dim dRect As RECT, scrlX As Long, scrlY As Long
     
     With destRect
         .x1 = (EditorTileX * 32) - sRect.Left
-        .X2 = (EditorTileWidth * 32) + .x1
+        .x2 = (EditorTileWidth * 32) + .x1
         .y1 = (EditorTileY * 32) - sRect.Top
-        .Y2 = (EditorTileHeight * 32) + .y1
+        .y2 = (EditorTileHeight * 32) + .y1
     End With
     
     DrawSelectionBox destRect
         
     With srcRect
         .x1 = 0
-        .X2 = Width
+        .x2 = Width
         .y1 = 0
-        .Y2 = Height
+        .y2 = Height
     End With
                     
     With destRect
         .x1 = 0
-        .X2 = frmEditor_Map.picBack.ScaleWidth
+        .x2 = frmEditor_Map.picBack.ScaleWidth
         .y1 = 0
-        .Y2 = frmEditor_Map.picBack.ScaleHeight
+        .y2 = frmEditor_Map.picBack.ScaleHeight
     End With
     
     'Now render the selection tiles and we are done!
                     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present destRect, destRect, frmEditor_Map.picBack.hwnd, ByVal (0)
+    Direct3D_Device.Present destRect, destRect, frmEditor_Map.picBack.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2516,8 +2518,8 @@ End Sub
 
 Sub DrawSelectionBox(dRect As D3DRECT)
 Dim Width As Long, Height As Long, X As Long, Y As Long
-    Width = dRect.X2 - dRect.x1
-    Height = dRect.Y2 - dRect.y1
+    Width = dRect.x2 - dRect.x1
+    Height = dRect.y2 - dRect.y1
     X = dRect.x1
     Y = dRect.y1
     If Width > 6 And Height > 6 Then
@@ -2603,20 +2605,20 @@ Dim Width As Long, Height As Long
     
     With srcRect
         .x1 = 0
-        .X2 = Width
+        .x2 = Width
         .y1 = 0
-        .Y2 = Height
+        .y2 = Height
     End With
                     
     With destRect
         .x1 = 0
-        .X2 = Width
+        .x2 = Width
         .y1 = 0
-        .Y2 = Height
+        .y2 = Height
     End With
                     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present srcRect, destRect, frmMenu.picSprite.hwnd, ByVal (0)
+    Direct3D_Device.Present srcRect, destRect, frmMenu.picSprite.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2654,13 +2656,13 @@ Dim dRect As RECT
     RenderTextureByRects Tex_Item(itemnum), sRect, dRect
     With destRect
         .x1 = 0
-        .X2 = PIC_X
+        .x2 = PIC_X
         .y1 = 0
-        .Y2 = PIC_Y
+        .y2 = PIC_Y
     End With
                     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present destRect, destRect, frmEditor_Map.picMapItem.hwnd, ByVal (0)
+    Direct3D_Device.Present destRect, destRect, frmEditor_Map.picMapItem.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2701,13 +2703,13 @@ Dim dRect As RECT
     
     With destRect
         .x1 = 0
-        .X2 = PIC_X
+        .x2 = PIC_X
         .y1 = 0
-        .Y2 = PIC_Y
+        .y2 = PIC_Y
     End With
                     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present destRect, destRect, frmEditor_Map.picMapKey.hwnd, ByVal (0)
+    Direct3D_Device.Present destRect, destRect, frmEditor_Map.picMapKey.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2746,13 +2748,13 @@ Dim dRect As RECT
     RenderTextureByRects Tex_Item(itemnum), sRect, dRect
     With destRect
         .x1 = 0
-        .X2 = PIC_X
+        .x2 = PIC_X
         .y1 = 0
-        .Y2 = PIC_Y
+        .y2 = PIC_Y
     End With
                     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present destRect, destRect, frmEditor_Item.picItem.hwnd, ByVal (0)
+    Direct3D_Device.Present destRect, destRect, frmEditor_Item.picItem.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2793,13 +2795,13 @@ Dim dRect As RECT
                     
     With destRect
         .x1 = 0
-        .X2 = Tex_Paperdoll(Sprite).Width / 4
+        .x2 = Tex_Paperdoll(Sprite).Width / 4
         .y1 = 0
-        .Y2 = Tex_Paperdoll(Sprite).Height / 4
+        .y2 = Tex_Paperdoll(Sprite).Height / 4
     End With
                     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present destRect, destRect, frmEditor_Item.picPaperdoll.hwnd, ByVal (0)
+    Direct3D_Device.Present destRect, destRect, frmEditor_Item.picPaperdoll.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2835,15 +2837,15 @@ Dim dRect As RECT
     
     With destRect
         .x1 = 0
-        .X2 = PIC_X
+        .x2 = PIC_X
         .y1 = 0
-        .Y2 = PIC_Y
+        .y2 = PIC_Y
     End With
     Direct3D_Device.Clear 0, ByVal 0, D3DCLEAR_TARGET, D3DColorRGBA(0, 0, 0, 0), 1#, 0
     Direct3D_Device.BeginScene
     RenderTextureByRects Tex_SpellIcon(iconnum), sRect, dRect
     Direct3D_Device.EndScene
-    Direct3D_Device.Present destRect, destRect, frmEditor_Spell.picSprite.hwnd, ByVal (0)
+    Direct3D_Device.Present destRect, destRect, frmEditor_Spell.picSprite.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -2878,14 +2880,14 @@ Dim ShouldRender As Boolean
             ShouldRender = False
             
             ' check if we need to render new frame
-            If AnimEditorTimer(i) + looptime <= GetTickCount Then
+            If AnimEditorTimer(i) + looptime <= timeGetTime Then
                 ' check if out of range
                 If AnimEditorFrame(i) >= FrameCount Then
                     AnimEditorFrame(i) = 1
                 Else
                     AnimEditorFrame(i) = AnimEditorFrame(i) + 1
                 End If
-                AnimEditorTimer(i) = GetTickCount
+                AnimEditorTimer(i) = timeGetTime
                 ShouldRender = True
             End If
         
@@ -2913,20 +2915,20 @@ Dim ShouldRender As Boolean
                     
                     With srcRect
                         .x1 = 0
-                        .X2 = frmEditor_Animation.picSprite(i).Width
+                        .x2 = frmEditor_Animation.picSprite(i).Width
                         .y1 = 0
-                        .Y2 = frmEditor_Animation.picSprite(i).Height
+                        .y2 = frmEditor_Animation.picSprite(i).Height
                     End With
                                 
                     With destRect
                         .x1 = 0
-                        .X2 = frmEditor_Animation.picSprite(i).Width
+                        .x2 = frmEditor_Animation.picSprite(i).Width
                         .y1 = 0
-                        .Y2 = frmEditor_Animation.picSprite(i).Height
+                        .y2 = frmEditor_Animation.picSprite(i).Height
                     End With
                                 
                     Direct3D_Device.EndScene
-                    Direct3D_Device.Present srcRect, destRect, frmEditor_Animation.picSprite(i).hwnd, ByVal (0)
+                    Direct3D_Device.Present srcRect, destRect, frmEditor_Animation.picSprite(i).hWnd, ByVal (0)
                 End If
             End If
         End If
@@ -2970,13 +2972,13 @@ Dim dRect As RECT
     
     With destRect
         .x1 = 0
-        .X2 = SIZE_X
+        .x2 = SIZE_X
         .y1 = 0
-        .Y2 = SIZE_Y
+        .y2 = SIZE_Y
     End With
                     
     Direct3D_Device.EndScene
-    Direct3D_Device.Present destRect, destRect, frmEditor_NPC.picSprite.hwnd, ByVal (0)
+    Direct3D_Device.Present destRect, destRect, frmEditor_NPC.picSprite.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -3013,20 +3015,20 @@ Dim dRect As RECT
         RenderTextureByRects Tex_Resource(Sprite), sRect, dRect
         With srcRect
             .x1 = 0
-            .X2 = Tex_Resource(Sprite).Width
+            .x2 = Tex_Resource(Sprite).Width
             .y1 = 0
-            .Y2 = Tex_Resource(Sprite).Height
+            .y2 = Tex_Resource(Sprite).Height
         End With
         
         With destRect
             .x1 = 0
-            .X2 = frmEditor_Resource.picNormalPic.ScaleWidth
+            .x2 = frmEditor_Resource.picNormalPic.ScaleWidth
             .y1 = 0
-            .Y2 = frmEditor_Resource.picNormalPic.ScaleHeight
+            .y2 = frmEditor_Resource.picNormalPic.ScaleHeight
         End With
                     
         Direct3D_Device.EndScene
-        Direct3D_Device.Present srcRect, destRect, frmEditor_Resource.picNormalPic.hwnd, ByVal (0)
+        Direct3D_Device.Present srcRect, destRect, frmEditor_Resource.picNormalPic.hWnd, ByVal (0)
     End If
 
     ' exhausted sprite
@@ -3049,20 +3051,20 @@ Dim dRect As RECT
         
         With destRect
             .x1 = 0
-            .X2 = frmEditor_Resource.picExhaustedPic.ScaleWidth
+            .x2 = frmEditor_Resource.picExhaustedPic.ScaleWidth
             .y1 = 0
-            .Y2 = frmEditor_Resource.picExhaustedPic.ScaleHeight
+            .y2 = frmEditor_Resource.picExhaustedPic.ScaleHeight
         End With
         
         With srcRect
             .x1 = 0
-            .X2 = Tex_Resource(Sprite).Width
+            .x2 = Tex_Resource(Sprite).Width
             .y1 = 0
-            .Y2 = Tex_Resource(Sprite).Height
+            .y2 = Tex_Resource(Sprite).Height
         End With
                     
         Direct3D_Device.EndScene
-        Direct3D_Device.Present srcRect, destRect, frmEditor_Resource.picExhaustedPic.hwnd, ByVal (0)
+        Direct3D_Device.Present srcRect, destRect, frmEditor_Resource.picExhaustedPic.hWnd, ByVal (0)
     End If
     
     ' Error handler
@@ -3117,7 +3119,7 @@ Dim rec_pos As RECT, srcRect As D3DRECT
             ' Blit out the items
             If numitems > 0 Then
                 For i = 1 To MAX_MAP_ITEMS
-                    If MapItem(i).num > 0 Then
+                    If MapItem(i).Num > 0 Then
                         Call DrawItem(i)
                     End If
                 Next
@@ -3267,7 +3269,7 @@ Dim rec_pos As RECT, srcRect As D3DRECT
                 End If
             Next
             For i = 1 To Npc_HighIndex
-                If MapNpc(i).num > 0 Then
+                If MapNpc(i).Num > 0 Then
                     If CurX = MapNpc(i).X And CurY = MapNpc(i).Y Then
                         If myTargetType = TargetNPC And myTarget = i Then
                             ' dont render lol
@@ -3296,9 +3298,9 @@ Dim rec_pos As RECT, srcRect As D3DRECT
                 
             With srcRect
                 .x1 = 0
-                .X2 = frmMain.picScreen.ScaleWidth
+                .x2 = frmMain.picScreen.ScaleWidth
                 .y1 = 0
-                .Y2 = frmMain.picScreen.ScaleHeight
+                .y2 = frmMain.picScreen.ScaleHeight
             End With
             
             If BFPS Then
@@ -3329,7 +3331,7 @@ Dim rec_pos As RECT, srcRect As D3DRECT
             
             ' draw npc names
             For i = 1 To Npc_HighIndex
-                If MapNpc(i).num > 0 Then
+                If MapNpc(i).Num > 0 Then
                     Call DrawNpcName(i)
                 End If
             Next
@@ -3352,7 +3354,7 @@ Dim rec_pos As RECT, srcRect As D3DRECT
             If InMapEditor Then Call DrawMapAttributes
             
             If FadeAmount > 0 Then RenderTexture Tex_Fade, 0, 0, 0, 0, frmMain.picScreen.ScaleWidth, frmMain.picScreen.ScaleHeight, 32, 32, D3DColorRGBA(255, 255, 255, FadeAmount)
-            If FlashTimer > GetTickCount Then RenderTexture Tex_White, 0, 0, 0, 0, frmMain.picScreen.ScaleWidth, frmMain.picScreen.ScaleHeight, 32, 32, -1
+            If FlashTimer > timeGetTime Then RenderTexture Tex_White, 0, 0, 0, 0, frmMain.picScreen.ScaleWidth, frmMain.picScreen.ScaleHeight, 32, 32, -1
     
         Direct3D_Device.EndScene
         
@@ -3420,7 +3422,7 @@ Private Function DirectX_ReInit() As Boolean
     Direct3D_Window.BackBufferCount = 1 '1 backbuffer only
     Direct3D_Window.BackBufferWidth = 960 ' frmMain.picScreen.ScaleWidth 'Match the backbuffer width with the display width
     Direct3D_Window.BackBufferHeight = 768 'frmMain.picScreen.ScaleHeight 'Match the backbuffer height with the display height
-    Direct3D_Window.hDeviceWindow = frmMain.picScreen.hwnd 'Use frmMain as the device window.
+    Direct3D_Window.hDeviceWindow = frmMain.picScreen.hWnd 'Use frmMain as the device window.
     
     With Direct3D_Device
         .SetVertexShader D3DFVF_XYZRHW Or D3DFVF_TEX1 Or D3DFVF_DIFFUSE
@@ -3706,20 +3708,20 @@ Dim Sprite As Long, colour As Long
         
         With srcRect
             .x1 = BankLeft
-            .X2 = .x1 + 400
+            .x2 = .x1 + 400
             .y1 = BankTop
-            .Y2 = .y1 + 310
+            .y2 = .y1 + 310
         End With
                     
         With destRect
             .x1 = BankLeft
-            .X2 = .x1 + 400
+            .x2 = .x1 + 400
             .y1 = BankTop
-            .Y2 = 310 + .y1
+            .y2 = 310 + .y1
         End With
                     
         Direct3D_Device.EndScene
-        Direct3D_Device.Present srcRect, destRect, frmMain.picBank.hwnd, ByVal (0)
+        Direct3D_Device.Present srcRect, destRect, frmMain.picBank.hWnd, ByVal (0)
         'frmMain.picBank.Refresh
     End If
     
@@ -3773,18 +3775,18 @@ Dim Sprite As Long
     
     With srcRect
         .x1 = 0
-        .X2 = 32
+        .x2 = 32
         .y1 = 0
-        .Y2 = 32
+        .y2 = 32
     End With
     With destRect
         .x1 = 2
         .y1 = 2
-        .Y2 = .y1 + 32
-        .X2 = .x1 + 32
+        .y2 = .y1 + 32
+        .x2 = .x1 + 32
     End With
     Direct3D_Device.EndScene
-    Direct3D_Device.Present srcRect, destRect, frmMain.picTempBank.hwnd, ByVal (0)
+    Direct3D_Device.Present srcRect, destRect, frmMain.picTempBank.hWnd, ByVal (0)
     
     ' Error handler
     Exit Sub
@@ -3924,9 +3926,9 @@ Dim dRect As RECT
                     
                     With destRect
                         .x1 = dRect.Left
-                        .X2 = dRect.Right
+                        .x2 = dRect.Right
                         .y1 = dRect.Top
-                        .Y2 = dRect.Bottom
+                        .y2 = dRect.Bottom
                     End With
                     
                     Direct3D_Device.Clear 0, ByVal 0, D3DCLEAR_TARGET, D3DColorRGBA(0, 0, 0, 0), 1#, 0
@@ -3935,35 +3937,35 @@ Dim dRect As RECT
                     If (GraphicSelX2 < GraphicSelX Or GraphicSelY2 < GraphicSelY) Or (GraphicSelX2 = 0 And GraphicSelY2 = 0) Then
                         With destRect
                             .x1 = (GraphicSelX * (Tex_Character(frmEditor_Events.scrlGraphic.Value).Width / 4)) - sRect.Left
-                            .X2 = (Tex_Character(frmEditor_Events.scrlGraphic.Value).Width / 4) + .x1
+                            .x2 = (Tex_Character(frmEditor_Events.scrlGraphic.Value).Width / 4) + .x1
                             .y1 = (GraphicSelY * (Tex_Character(frmEditor_Events.scrlGraphic.Value).Height / 4)) - sRect.Top
-                            .Y2 = (Tex_Character(frmEditor_Events.scrlGraphic.Value).Height / 4) + .y1
+                            .y2 = (Tex_Character(frmEditor_Events.scrlGraphic.Value).Height / 4) + .y1
                         End With
 
                     Else
                         With destRect
                             .x1 = (GraphicSelX * 32) - sRect.Left
-                            .X2 = ((GraphicSelX2 - GraphicSelX) * 32) + .x1
+                            .x2 = ((GraphicSelX2 - GraphicSelX) * 32) + .x1
                             .y1 = (GraphicSelY * 32) - sRect.Top
-                            .Y2 = ((GraphicSelY2 - GraphicSelY) * 32) + .y1
+                            .y2 = ((GraphicSelY2 - GraphicSelY) * 32) + .y1
                         End With
                     End If
                     DrawSelectionBox destRect
                     
                     With srcRect
                         .x1 = dRect.Left
-                        .X2 = frmEditor_Events.picGraphicSel.ScaleWidth
+                        .x2 = frmEditor_Events.picGraphicSel.ScaleWidth
                         .y1 = dRect.Top
-                        .Y2 = frmEditor_Events.picGraphicSel.ScaleHeight
+                        .y2 = frmEditor_Events.picGraphicSel.ScaleHeight
                     End With
                     With destRect
                         .x1 = 0
                         .y1 = 0
-                        .X2 = frmEditor_Events.picGraphicSel.ScaleWidth
-                        .Y2 = frmEditor_Events.picGraphicSel.ScaleHeight
+                        .x2 = frmEditor_Events.picGraphicSel.ScaleWidth
+                        .y2 = frmEditor_Events.picGraphicSel.ScaleHeight
                     End With
                     Direct3D_Device.EndScene
-                    Direct3D_Device.Present srcRect, destRect, frmEditor_Events.picGraphicSel.hwnd, ByVal (0)
+                    Direct3D_Device.Present srcRect, destRect, frmEditor_Events.picGraphicSel.hWnd, ByVal (0)
                     
                     If GraphicSelX <= 3 And GraphicSelY <= 3 Then
                     Else
@@ -4012,17 +4014,17 @@ Dim dRect As RECT
                     If (GraphicSelX2 < GraphicSelX Or GraphicSelY2 < GraphicSelY) Or (GraphicSelX2 = 0 And GraphicSelY2 = 0) Then
                         With destRect
                             .x1 = (GraphicSelX * 32) - sRect.Left
-                            .X2 = PIC_X + .x1
+                            .x2 = PIC_X + .x1
                             .y1 = (GraphicSelY * 32) - sRect.Top
-                            .Y2 = PIC_Y + .y1
+                            .y2 = PIC_Y + .y1
                         End With
 
                     Else
                         With destRect
                             .x1 = (GraphicSelX * 32) - sRect.Left
-                            .X2 = ((GraphicSelX2 - GraphicSelX) * 32) + .x1
+                            .x2 = ((GraphicSelX2 - GraphicSelX) * 32) + .x1
                             .y1 = (GraphicSelY * 32) - sRect.Top
-                            .Y2 = ((GraphicSelY2 - GraphicSelY) * 32) + .y1
+                            .y2 = ((GraphicSelY2 - GraphicSelY) * 32) + .y1
                         End With
                     End If
                     
@@ -4030,18 +4032,18 @@ Dim dRect As RECT
                     
                     With srcRect
                         .x1 = dRect.Left
-                        .X2 = frmEditor_Events.picGraphicSel.ScaleWidth
+                        .x2 = frmEditor_Events.picGraphicSel.ScaleWidth
                         .y1 = dRect.Top
-                        .Y2 = frmEditor_Events.picGraphicSel.ScaleHeight
+                        .y2 = frmEditor_Events.picGraphicSel.ScaleHeight
                     End With
                     With destRect
                         .x1 = 0
                         .y1 = 0
-                        .X2 = frmEditor_Events.picGraphicSel.ScaleWidth
-                        .Y2 = frmEditor_Events.picGraphicSel.ScaleHeight
+                        .x2 = frmEditor_Events.picGraphicSel.ScaleWidth
+                        .y2 = frmEditor_Events.picGraphicSel.ScaleHeight
                     End With
                     Direct3D_Device.EndScene
-                    Direct3D_Device.Present srcRect, destRect, frmEditor_Events.picGraphicSel.hwnd, ByVal (0)
+                    Direct3D_Device.Present srcRect, destRect, frmEditor_Events.picGraphicSel.hWnd, ByVal (0)
                 Else
                     frmEditor_Events.picGraphicSel.Cls
                     Exit Sub
@@ -4065,15 +4067,15 @@ Dim dRect As RECT
                     End With
                     With destRect
                         .x1 = dRect.Left
-                        .X2 = dRect.Right
+                        .x2 = dRect.Right
                         .y1 = dRect.Top
-                        .Y2 = dRect.Bottom
+                        .y2 = dRect.Bottom
                     End With
                     Direct3D_Device.Clear 0, ByVal 0, D3DCLEAR_TARGET, D3DColorRGBA(0, 0, 0, 0), 1#, 0
                     Direct3D_Device.BeginScene
                     RenderTextureByRects Tex_Character(frmEditor_Events.scrlGraphic.Value), sRect, dRect
                     Direct3D_Device.EndScene
-                    Direct3D_Device.Present destRect, destRect, frmEditor_Events.picGraphic.hwnd, ByVal (0)
+                    Direct3D_Device.Present destRect, destRect, frmEditor_Events.picGraphic.hWnd, ByVal (0)
                 End If
             Case 2
                 If tmpEvent.Pages(curPageNum).Graphic > 0 And tmpEvent.Pages(curPageNum).Graphic <= NumTileSets Then
@@ -4090,15 +4092,15 @@ Dim dRect As RECT
                         End With
                         With destRect
                             .x1 = dRect.Left
-                            .X2 = dRect.Right
+                            .x2 = dRect.Right
                             .y1 = dRect.Top
-                            .Y2 = dRect.Bottom
+                            .y2 = dRect.Bottom
                         End With
                         Direct3D_Device.Clear 0, ByVal 0, D3DCLEAR_TARGET, D3DColorRGBA(0, 0, 0, 0), 1#, 0
                         Direct3D_Device.BeginScene
                         RenderTextureByRects Tex_Tileset(frmEditor_Events.scrlGraphic.Value), sRect, dRect
                         Direct3D_Device.EndScene
-                        Direct3D_Device.Present destRect, destRect, frmEditor_Events.picGraphic.hwnd, ByVal (0)
+                        Direct3D_Device.Present destRect, destRect, frmEditor_Events.picGraphic.hWnd, ByVal (0)
                     Else
                         sRect.Top = tmpEvent.Pages(curPageNum).GraphicY * 32
                         sRect.Left = tmpEvent.Pages(curPageNum).GraphicX * 32
@@ -4112,15 +4114,15 @@ Dim dRect As RECT
                         End With
                         With destRect
                             .x1 = dRect.Left
-                            .X2 = dRect.Right
+                            .x2 = dRect.Right
                             .y1 = dRect.Top
-                            .Y2 = dRect.Bottom
+                            .y2 = dRect.Bottom
                         End With
                         Direct3D_Device.Clear 0, ByVal 0, D3DCLEAR_TARGET, D3DColorRGBA(0, 0, 0, 0), 1#, 0
                         Direct3D_Device.BeginScene
                         RenderTextureByRects Tex_Tileset(frmEditor_Events.scrlGraphic.Value), sRect, dRect
                         Direct3D_Device.EndScene
-                        Direct3D_Device.Present destRect, destRect, frmEditor_Events.picGraphic.hwnd, ByVal (0)
+                        Direct3D_Device.Present destRect, destRect, frmEditor_Events.picGraphic.hWnd, ByVal (0)
                     End If
                 End If
         End Select
@@ -4135,38 +4137,38 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DrawEvent(id As Long)
+Public Sub DrawEvent(ID As Long)
     Dim X As Long, Y As Long, Width As Long, Height As Long, sRect As RECT, dRect As RECT, anim As Long, spritetop As Long
-    If Map.MapEvents(id).Visible = 0 Then Exit Sub
+    If Map.MapEvents(ID).Visible = 0 Then Exit Sub
     If InMapEditor Then Exit Sub
-    Select Case Map.MapEvents(id).GraphicType
+    Select Case Map.MapEvents(ID).GraphicType
         Case 0
             Exit Sub
             
         Case 1
-            If Map.MapEvents(id).GraphicNum <= 0 Or Map.MapEvents(id).GraphicNum > NumCharacters Then Exit Sub
-            Width = Tex_Character(Map.MapEvents(id).GraphicNum).Width / 4
-            Height = Tex_Character(Map.MapEvents(id).GraphicNum).Height / 4
+            If Map.MapEvents(ID).GraphicNum <= 0 Or Map.MapEvents(ID).GraphicNum > NumCharacters Then Exit Sub
+            Width = Tex_Character(Map.MapEvents(ID).GraphicNum).Width / 4
+            Height = Tex_Character(Map.MapEvents(ID).GraphicNum).Height / 4
             ' Reset frame
-            If Map.MapEvents(id).Step = 3 Then
+            If Map.MapEvents(ID).Step = 3 Then
                 anim = 0
-            ElseIf Map.MapEvents(id).Step = 1 Then
+            ElseIf Map.MapEvents(ID).Step = 1 Then
                 anim = 2
             End If
             
-            Select Case Map.MapEvents(id).Dir
+            Select Case Map.MapEvents(ID).Dir
                 Case DirectionUp
-                    If (Map.MapEvents(id).yOffset > 8) Then anim = Map.MapEvents(id).Step
+                    If (Map.MapEvents(ID).yOffset > 8) Then anim = Map.MapEvents(ID).Step
                 Case DirectionDown
-                    If (Map.MapEvents(id).yOffset < -8) Then anim = Map.MapEvents(id).Step
+                    If (Map.MapEvents(ID).yOffset < -8) Then anim = Map.MapEvents(ID).Step
                 Case DirectionLeft
-                    If (Map.MapEvents(id).xOffset > 8) Then anim = Map.MapEvents(id).Step
+                    If (Map.MapEvents(ID).xOffset > 8) Then anim = Map.MapEvents(ID).Step
                 Case DirectionRight
-                    If (Map.MapEvents(id).xOffset < -8) Then anim = Map.MapEvents(id).Step
+                    If (Map.MapEvents(ID).xOffset < -8) Then anim = Map.MapEvents(ID).Step
             End Select
             
             ' Set the left
-            Select Case Map.MapEvents(id).ShowDir
+            Select Case Map.MapEvents(ID).ShowDir
                 Case DirectionUp
                     spritetop = 3
                 Case DirectionRight
@@ -4177,9 +4179,9 @@ Public Sub DrawEvent(id As Long)
                     spritetop = 1
             End Select
             
-            If Map.MapEvents(id).WalkAnim = 1 Then anim = 0
+            If Map.MapEvents(ID).WalkAnim = 1 Then anim = 0
             
-            If Map.MapEvents(id).Moving = 0 Then anim = Map.MapEvents(id).GraphicX
+            If Map.MapEvents(ID).Moving = 0 Then anim = Map.MapEvents(ID).GraphicX
             
             With sRect
                 .Top = spritetop * Height
@@ -4189,50 +4191,50 @@ Public Sub DrawEvent(id As Long)
             End With
         
             ' Calculate the X
-            X = Map.MapEvents(id).X * PIC_X + Map.MapEvents(id).xOffset - ((Width - 32) / 2)
+            X = Map.MapEvents(ID).X * PIC_X + Map.MapEvents(ID).xOffset - ((Width - 32) / 2)
         
             ' Is the player's height more than 32..?
             If (Height * 4) > 32 Then
                 ' Create a 32 pixel offset for larger sprites
-                Y = Map.MapEvents(id).Y * PIC_Y + Map.MapEvents(id).yOffset - ((Height) - 32)
+                Y = Map.MapEvents(ID).Y * PIC_Y + Map.MapEvents(ID).yOffset - ((Height) - 32)
             Else
                 ' Proceed as normal
-                Y = Map.MapEvents(id).Y * PIC_Y + Map.MapEvents(id).yOffset
+                Y = Map.MapEvents(ID).Y * PIC_Y + Map.MapEvents(ID).yOffset
             End If
         
             ' render the actual sprite
-            Call DrawSprite(Map.MapEvents(id).GraphicNum, X, Y, sRect)
+            Call DrawSprite(Map.MapEvents(ID).GraphicNum, X, Y, sRect)
             
         Case 2
-            If Map.MapEvents(id).GraphicNum < 1 Or Map.MapEvents(id).GraphicNum > NumTileSets Then Exit Sub
+            If Map.MapEvents(ID).GraphicNum < 1 Or Map.MapEvents(ID).GraphicNum > NumTileSets Then Exit Sub
             
-            If Map.MapEvents(id).GraphicY2 > 0 Or Map.MapEvents(id).GraphicX2 > 0 Then
+            If Map.MapEvents(ID).GraphicY2 > 0 Or Map.MapEvents(ID).GraphicX2 > 0 Then
                 With sRect
-                    .Top = Map.MapEvents(id).GraphicY * 32
-                    .Bottom = .Top + ((Map.MapEvents(id).GraphicY2 - Map.MapEvents(id).GraphicY) * 32)
-                    .Left = Map.MapEvents(id).GraphicX * 32
-                    .Right = .Left + ((Map.MapEvents(id).GraphicX2 - Map.MapEvents(id).GraphicX) * 32)
+                    .Top = Map.MapEvents(ID).GraphicY * 32
+                    .Bottom = .Top + ((Map.MapEvents(ID).GraphicY2 - Map.MapEvents(ID).GraphicY) * 32)
+                    .Left = Map.MapEvents(ID).GraphicX * 32
+                    .Right = .Left + ((Map.MapEvents(ID).GraphicX2 - Map.MapEvents(ID).GraphicX) * 32)
                 End With
             Else
                 With sRect
-                    .Top = Map.MapEvents(id).GraphicY * 32
+                    .Top = Map.MapEvents(ID).GraphicY * 32
                     .Bottom = .Top + 32
-                    .Left = Map.MapEvents(id).GraphicX * 32
+                    .Left = Map.MapEvents(ID).GraphicX * 32
                     .Right = .Left + 32
                 End With
             End If
             
-            X = Map.MapEvents(id).X * 32
-            Y = Map.MapEvents(id).Y * 32
+            X = Map.MapEvents(ID).X * 32
+            Y = Map.MapEvents(ID).Y * 32
             
             X = X - ((sRect.Right - sRect.Left) / 2)
             Y = Y - (sRect.Bottom - sRect.Top) + 32
             
             
-            If Map.MapEvents(id).GraphicY2 > 0 Then
-                RenderTexture Tex_Tileset(Map.MapEvents(id).GraphicNum), ConvertMapX(Map.MapEvents(id).X * 32), ConvertMapY((Map.MapEvents(id).Y - ((Map.MapEvents(id).GraphicY2 - Map.MapEvents(id).GraphicY) - 1)) * 32), sRect.Left, sRect.Top, sRect.Right - sRect.Left, sRect.Bottom - sRect.Top, sRect.Right - sRect.Left, sRect.Bottom - sRect.Top, D3DColorRGBA(255, 255, 255, 255)
+            If Map.MapEvents(ID).GraphicY2 > 0 Then
+                RenderTexture Tex_Tileset(Map.MapEvents(ID).GraphicNum), ConvertMapX(Map.MapEvents(ID).X * 32), ConvertMapY((Map.MapEvents(ID).Y - ((Map.MapEvents(ID).GraphicY2 - Map.MapEvents(ID).GraphicY) - 1)) * 32), sRect.Left, sRect.Top, sRect.Right - sRect.Left, sRect.Bottom - sRect.Top, sRect.Right - sRect.Left, sRect.Bottom - sRect.Top, D3DColorRGBA(255, 255, 255, 255)
             Else
-                RenderTexture Tex_Tileset(Map.MapEvents(id).GraphicNum), ConvertMapX(Map.MapEvents(id).X * 32), ConvertMapY(Map.MapEvents(id).Y * 32), sRect.Left, sRect.Top, sRect.Right - sRect.Left, sRect.Bottom - sRect.Top, sRect.Right - sRect.Left, sRect.Bottom - sRect.Top, D3DColorRGBA(255, 255, 255, 255)
+                RenderTexture Tex_Tileset(Map.MapEvents(ID).GraphicNum), ConvertMapX(Map.MapEvents(ID).X * 32), ConvertMapY(Map.MapEvents(ID).Y * 32), sRect.Left, sRect.Top, sRect.Right - sRect.Left, sRect.Bottom - sRect.Top, sRect.Right - sRect.Left, sRect.Bottom - sRect.Top, D3DColorRGBA(255, 255, 255, 255)
             End If
     End Select
 End Sub
@@ -4970,41 +4972,41 @@ Dim situation As Byte
     End Select
 End Sub
 
-Public Function checkTileMatch(ByVal layerNum As Long, ByVal x1 As Long, ByVal y1 As Long, ByVal X2 As Long, ByVal Y2 As Long) As Boolean
+Public Function checkTileMatch(ByVal layerNum As Long, ByVal x1 As Long, ByVal y1 As Long, ByVal x2 As Long, ByVal y2 As Long) As Boolean
     ' we'll exit out early if true
     checkTileMatch = True
     
     ' if it's off the map then set it as autotile and exit out early
-    If X2 < 0 Or X2 > Map.MaxX Or Y2 < 0 Or Y2 > Map.MaxY Then
+    If x2 < 0 Or x2 > Map.MaxX Or y2 < 0 Or y2 > Map.MaxY Then
         checkTileMatch = True
         Exit Function
     End If
     
     ' fakes ALWAYS return true
-    If Map.Tile(X2, Y2).Autotile(layerNum) = ATFake Then
+    If Map.Tile(x2, y2).Autotile(layerNum) = ATFake Then
         checkTileMatch = True
         Exit Function
     End If
     
     ' check neighbour is an autotile
-    If Map.Tile(X2, Y2).Autotile(layerNum) = 0 Then
+    If Map.Tile(x2, y2).Autotile(layerNum) = 0 Then
         checkTileMatch = False
         Exit Function
     End If
     
     ' check we're a matching
-    If Map.Tile(x1, y1).Layer(layerNum).Tileset <> Map.Tile(X2, Y2).Layer(layerNum).Tileset Then
+    If Map.Tile(x1, y1).Layer(layerNum).Tileset <> Map.Tile(x2, y2).Layer(layerNum).Tileset Then
         checkTileMatch = False
         Exit Function
     End If
     
     ' check tiles match
-    If Map.Tile(x1, y1).Layer(layerNum).X <> Map.Tile(X2, Y2).Layer(layerNum).X Then
+    If Map.Tile(x1, y1).Layer(layerNum).X <> Map.Tile(x2, y2).Layer(layerNum).X Then
         checkTileMatch = False
         Exit Function
     End If
         
-    If Map.Tile(x1, y1).Layer(layerNum).Y <> Map.Tile(X2, Y2).Layer(layerNum).Y Then
+    If Map.Tile(x1, y1).Layer(layerNum).Y <> Map.Tile(x2, y2).Layer(layerNum).Y Then
         checkTileMatch = False
         Exit Function
     End If
@@ -5039,7 +5041,7 @@ Dim rec As DxVBLib.RECT
     If Index < 1 Or PlayerProjectile < 1 Or PlayerProjectile > MAX_PLAYER_PROJECTILES Then Exit Sub
     
     ' check to see if it's time to move the Projectile
-    If GetTickCount > Player(Index).ProjecTile(PlayerProjectile).TravelTime Then
+    If timeGetTime > Player(Index).ProjecTile(PlayerProjectile).TravelTime Then
         With Player(Index).ProjecTile(PlayerProjectile)
             ' set next travel time and the current position and then set the actual direction based on RMXP arrow tiles.
             Select Case .direction
@@ -5064,7 +5066,7 @@ Dim rec As DxVBLib.RECT
                     ' check if they reached maxrange
                     If .X = (GetPlayerX(Index) - .Range) - 1 Then ClearProjectile Index, PlayerProjectile: Exit Sub
             End Select
-            .TravelTime = GetTickCount + .speed
+            .TravelTime = timeGetTime + .speed
         End With
     End If
     

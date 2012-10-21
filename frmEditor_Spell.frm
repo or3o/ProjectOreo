@@ -39,38 +39,54 @@ Begin VB.Form frmEditor_Spell
       Top             =   4800
       Visible         =   0   'False
       Width           =   2055
+      Begin VB.HScrollBar scrlSprite 
+         Height          =   255
+         Left            =   120
+         Max             =   255
+         TabIndex        =   65
+         Top             =   1080
+         Width           =   1575
+      End
       Begin VB.ComboBox cmbBuffType 
          Height          =   300
          ItemData        =   "frmEditor_Spell.frx":0000
-         Left            =   240
+         Left            =   120
          List            =   "frmEditor_Spell.frx":003D
          TabIndex        =   63
-         Top             =   1680
+         Top             =   2160
          Width           =   1335
       End
       Begin VB.CheckBox chkmagic 
          Caption         =   "Magic"
          Height          =   255
-         Left            =   240
+         Left            =   120
          TabIndex        =   62
-         Top             =   1320
+         Top             =   1800
          Width           =   1335
       End
       Begin VB.CheckBox chkconviction 
          Caption         =   "Conviction"
          Height          =   255
-         Left            =   240
+         Left            =   120
          TabIndex        =   61
-         Top             =   840
+         Top             =   1440
          Width           =   1215
       End
       Begin VB.CheckBox chklycanthropy 
          Caption         =   "Lycanthropy"
          Height          =   375
-         Left            =   240
+         Left            =   120
          TabIndex        =   60
          Top             =   360
          Width           =   1335
+      End
+      Begin VB.Label lblSprite 
+         Caption         =   "Transformation sprite:"
+         Height          =   375
+         Left            =   120
+         TabIndex        =   64
+         Top             =   720
+         Width           =   1935
       End
    End
    Begin VB.TextBox txtspellexp 
@@ -941,6 +957,11 @@ errorhandler:
     HandleError "scrlRange_Change", "frmEditor_Spell", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
+End Sub
+
+Private Sub scrlSprite_Change()
+    lblSprite.Caption = "Transformation sprite: " & scrlSprite.Value
+    Spell(EditorIndex).Sprite = scrlSprite.Value
 End Sub
 
 Private Sub scrlStun_Change()

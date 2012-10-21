@@ -55,7 +55,7 @@ Public Type PartyRec
 End Type
 
 Public Type PlayerInvRec
-    num As Long
+    Num As Long
     Value As Long
 End Type
 
@@ -83,8 +83,9 @@ End Type
 Private Type PlayerRec
     ' General
     Name As String
-    Class As Long
-    Sprite As Long
+    Class As Byte
+    Sprite As Integer
+    Spriteold As Integer
     Level As Byte
     EXP As Long
     Access As Byte
@@ -98,7 +99,7 @@ Private Type PlayerRec
     ' Worn equipment
     Equipment(1 To Equipment.Equipment_Count - 1) As Long
     ' Position
-    Map As Long
+    Map As Integer
     X As Byte
     Y As Byte
     Dir As Byte
@@ -112,6 +113,7 @@ Private Type PlayerRec
     Step As Byte
     PlayerQuest(1 To MAX_QUESTS) As PlayerQuestRec
     EventTimer As Long
+    ProjecTile(1 To MAX_PLAYER_PROJECTILES) As ProjectileRec
         ' Proficiencies
     Swords As Byte
     SwordsExp As Long
@@ -139,14 +141,13 @@ Private Type PlayerRec
     FishingExp As Long
     Crafting As Byte
     CraftingExp As Long
-  ProjecTile(1 To MAX_PLAYER_PROJECTILES) As ProjectileRec
-    WieldDagger As Long
-    Craft As Long
+    WieldDagger As Byte
+    Craft As Byte
     Smith As Byte
     SmithExp As Long
     Alchemy As Byte
     AlchemyExp As Long
-    Enchants As Long
+    Enchants As Byte
     EnchantsExp As Long
 End Type
 
@@ -431,7 +432,7 @@ End Type
 
 Private Type MapItemRec
     playerName As String
-    num As Long
+    Num As Long
     Value As Long
     Frame As Byte
     X As Byte
@@ -453,16 +454,16 @@ Private Type NpcRec
     Stat(1 To Stats.Stat_Count - 1) As Byte
     HP As Long
     EXP As Long
-    Animation As Long
-    Damage As Long
-    Level As Long
+    Animation As Integer
+    Damage As Integer
+    Level As Byte
     Quest As Byte
     QuestNum As Long
     Skillexp As Long
 End Type
 
 Private Type MapNpcRec
-    num As Long
+    Num As Long
     target As Long
     targetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
@@ -480,7 +481,7 @@ Private Type MapNpcRec
 End Type
 
 Private Type TradeItemRec
-    Item As Long
+    Item As Integer
     ItemValue As Long
     CostItem As Long
     CostValue As Long
@@ -499,9 +500,9 @@ Private Type SpellRec
     
     Type As Byte
     MPCost As Long
-    LevelReq As Long
-    AccessReq As Long
-    ClassReq As Long
+    LevelReq As Byte
+    AccessReq As Byte
+    ClassReq As Byte
     CastTime As Long
     CDTime As Long
     Icon As Long
@@ -518,11 +519,12 @@ Private Type SpellRec
     CastAnim As Long
     SpellAnim As Long
     StunDuration As Long
-    EXP As Long
+    EXP As Integer
     Magic As Byte
     Lycanthropy As Byte
     Conviction As Byte
-    BuffType As Long
+    BuffType As Byte
+    Sprite As Byte
 End Type
 
 Private Type TempTileRec
@@ -545,15 +547,15 @@ Private Type ResourceRec
     sound As String * NAME_LENGTH
     
     ResourceType As Byte
-    ResourceImage As Long
-    ExhaustedImage As Long
-    ItemReward As Long
-    ToolRequired As Long
+    ResourceImage As Integer
+    ExhaustedImage As Integer
+    ItemReward As Integer
+    ToolRequired As Byte
     health As Long
     RespawnTime As Long
     WalkThrough As Boolean
-    Animation As Long
-    EXP As Long
+    Animation As Integer
+    EXP As Integer
 End Type
 
 Private Type ActionMsgRec
@@ -606,7 +608,7 @@ Public Type HotbarRec
 End Type
 
 Public Type ButtonRec
-    filename As String
+    FileName As String
     state As Byte
 End Type
 

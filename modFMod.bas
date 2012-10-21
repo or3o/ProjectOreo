@@ -56,11 +56,7 @@ Public Enum FSOUND_OUTPUTTYPES
     FSOUND_OUTPUT_ALSA      ' Linux Alsa driver.
 
     FSOUND_OUTPUT_ASIO      ' Low latency ASIO driver
-    FSOUND_OUTPUT_XBOX      ' Xbox driver
-    FSOUND_OUTPUT_PS2       ' PlayStation 2 driver
-    FSOUND_OUTPUT_MAC       ' Mac SoundMager driver
-    FSOUND_OUTPUT_GC        ' Gamecube driver
-    FSOUND_OUTPUT_PSP           ' PlayStation Portable driver
+
 
     FSOUND_OUTPUT_NOSOUND_NONREALTIME  ' This is the same as nosound, but the sound generation is driven by FSOUND_Update
 End Enum
@@ -172,11 +168,6 @@ Public Enum FSOUND_MODES
     FSOUND_XADPCM = &H400000          ' For XBOX only - Describes a user sample that its contents are compressed as XADPCM
     FSOUND_VAG = &H800000             ' For PS2 only - Describes a user sample that its contents are compressed as Sony VAG format.
     FSOUND_NONBLOCKING = &H1000000    ' For FSOUND_Stream_Open - Causes stream to open in the background and not block the foreground app - stream plays only when ready.
-    FSOUND_GCADPCM = &H2000000        ' For Gamecube only - Contents are compressed as Gamecube DSP-ADPCM format
-    FSOUND_MULTICHANNEL = &H4000000   ' For PS2 only - Contents are interleaved into a multi-channel (more than stereo) format
-    FSOUND_USECORE0 = &H8000000       ' For PS2 only - Sample/Stream is forced to use hardware voices 00-23
-    FSOUND_USECORE1 = &H10000000      ' For PS2 only - Sample/Stream is forced to use hardware voices 24-47
-    FSOUND_LOADMEMORYIOP = &H20000000 ' For PS2 only - "name" will be interpreted as a pointer to data for streaming and samples.  The address provided will be an IOP address
         FSOUND_IGNORETAGS = &H40000000    ' Skips id3v2 etc tag checks when opening a stream, to reduce seek/read overhead when opening files (helps with CD performance)
     FSOUND_STREAM_NET = &H80000000    ' Specifies an internet stream
     
@@ -239,7 +230,7 @@ Public Type FSOUND_REVERB_PROPERTIES
     RoomRolloffFactor   As Single   ' 0.0     10.0   0.0     like FSOUND_3D_SetRolloffFactor but for room effect
     Diffusion           As Single   ' 0.0     100.0  100.0   Value that controls the echo density in the late reverberation decay. (xbox only)
     Density             As Single   ' 0.0     100.0  100.0   Value that controls the modal density in the late reverberation decay (xbox only)
-    flags               As Long     '                        modifies the behavior of above properties
+    Flags               As Long     '                        modifies the behavior of above properties
 End Type
 
 
@@ -283,7 +274,7 @@ Public Type FSOUND_REVERB_CHANNELPROPERTIES
     RolloffFactor        As Single   ' like DS3D flRolloffFactor but per source
     RoomRolloffFactor    As Single   ' like DS3D flRolloffFactor but for room effect
     AirAbsorptionFactor  As Single   ' multiplies AirAbsorptionHF member of FSOUND_REVERB_PROPERTIES
-    flags                As Long     ' modifies the behavior of properties
+    Flags                As Long     ' modifies the behavior of properties
 End Type
 
 
@@ -344,19 +335,11 @@ Public Enum FSOUND_INITMODES
     FSOUND_INIT_GLOBALFOCUS = &H2               'For DirectSound output - sound is not muted when window is out of focus.
     FSOUND_INIT_ENABLESYSTEMCHANNELFX = &H4     'For DirectSound output - Allows FSOUND_FX api to be used on global software mixer output!
     FSOUND_INIT_ACCURATEVULEVELS = &H8          'This latency adjusts FSOUND_GetCurrentLevels, but incurs a small cpu and memory hit
-    FSOUND_INIT_PS2_DISABLECORE0REVERB = &H10   'PS2 only - Disable reverb on CORE 0 to regain SRAM
-    FSOUND_INIT_PS2_DISABLECORE1REVERB = &H20   'PS2 only - Disable reverb on CORE 1 to regain SRAM
-    FSOUND_INIT_PS2_SWAPDMACORES = &H40         'PS2 only - By default FMOD uses DMA CH0 for mixing, CH1 for uploads, this flag swaps them around
-    FSOUND_INIT_DONTLATENCYADJUST = &H80        'Callbacks are not latency adjusted, and are called at mix time.  Also information functions are immediate
-    FSOUND_INIT_GC_INITLIBS = &H100             'Gamecube only - Initializes GC audio libraries
     FSOUND_INIT_STREAM_FROM_MAIN_THREAD = &H200 'Turns off fmod streamer thread, and makes streaming update from FSOUND_Update called by the user
-    FSOUND_INIT_PS2_USEVOLUMERAMPING = &H400    'PS2 only   - Turns on volume ramping system to remove hardware clicks.
     FSOUND_INIT_DSOUND_DEFERRED = &H800         'Win32 only - For DirectSound output.  3D commands are batched together and executed at FSOUND_Update.
     FSOUND_INIT_DSOUND_HRTF_LIGHT = &H1000      'Win32 only - For DirectSound output.  FSOUND_HW3D buffers use a slightly higher quality algorithm when 3d hardware acceleration is not present.
     FSOUND_INIT_DSOUND_HRTF_FULL = &H2000       'Win32 only - For DirectSound output.  FSOUND_HW3D buffers use full quality 3d playback when 3d hardware acceleration is not present.
-    FSOUND_INIT_XBOX_REMOVEHEADROOM = &H4000    'XBox only - By default directsound attenuates all sound by 6db to avoid clipping/distortion.  CAUTION.  If you use this flag you are responsible for the final mix to make sure clipping / distortion doesn't happen.
-    FSOUND_INIT_PSP_SILENCEONUNDERRUN = &H8000  'PSP only - If streams skip / stutter when device is powered on, either increase stream buffersize, or use this flag instead to play silence while the UMD is recovering.
-End Enum
+ End Enum
 
 
 ' FSOUND_STREAM_NET_STATUS
@@ -421,7 +404,7 @@ Public Declare Function FSOUND_SetOutput Lib "fmod.dll" Alias "_FSOUND_SetOutput
 Public Declare Function FSOUND_SetDriver Lib "fmod.dll" Alias "_FSOUND_SetDriver@4" (ByVal driver As Long) As Byte
 Public Declare Function FSOUND_SetMixer Lib "fmod.dll" Alias "_FSOUND_SetMixer@4" (ByVal mixer As FSOUND_MIXERTYPES) As Byte
 Public Declare Function FSOUND_SetBufferSize Lib "fmod.dll" Alias "_FSOUND_SetBufferSize@4" (ByVal lenms As Long) As Byte
-Public Declare Function FSOUND_SetHWND Lib "fmod.dll" Alias "_FSOUND_SetHWND@4" (ByVal hwnd As Long) As Byte
+Public Declare Function FSOUND_SetHWND Lib "fmod.dll" Alias "_FSOUND_SetHWND@4" (ByVal hWnd As Long) As Byte
 Public Declare Function FSOUND_SetMinHardwareChannels Lib "fmod.dll" Alias "_FSOUND_SetMinHardwareChannels@4" (ByVal min As Integer) As Byte
 Public Declare Function FSOUND_SetMaxHardwareChannels Lib "fmod.dll" Alias "_FSOUND_SetMaxHardwareChannels@4" (ByVal min As Integer) As Byte
 Public Declare Function FSOUND_SetMemorySystem Lib "fmod.dll" Alias "_FSOUND_SetMemorySystem@20" (ByVal pool As Long, ByVal poollen As Long, ByVal useralloc As Long, ByVal userrealloc As Long, ByVal userfree As Long) As Byte
@@ -434,7 +417,7 @@ Public Declare Function FSOUND_SetMemorySystem Lib "fmod.dll" Alias "_FSOUND_Set
 '          which window is in focus. (FSOUND_OUTPUT_DSOUND only)
 '
 
-Public Declare Function FSOUND_Init Lib "fmod.dll" Alias "_FSOUND_Init@12" (ByVal mixrate As Long, ByVal maxchannels As Long, ByVal flags As FSOUND_INITMODES) As Byte
+Public Declare Function FSOUND_Init Lib "fmod.dll" Alias "_FSOUND_Init@12" (ByVal mixrate As Long, ByVal maxchannels As Long, ByVal Flags As FSOUND_INITMODES) As Byte
 Public Declare Function FSOUND_Close Lib "fmod.dll" Alias "_FSOUND_Close@0" () As Long
 
 '
@@ -459,8 +442,8 @@ Public Declare Function FSOUND_GetOutputHandle Lib "fmod.dll" Alias "_FSOUND_Get
 Public Declare Function FSOUND_GetDriver Lib "fmod.dll" Alias "_FSOUND_GetDriver@0" () As Long
 Public Declare Function FSOUND_GetMixer Lib "fmod.dll" Alias "_FSOUND_GetMixer@0" () As FSOUND_MIXERTYPES
 Public Declare Function FSOUND_GetNumDrivers Lib "fmod.dll" Alias "_FSOUND_GetNumDrivers@0" () As Long
-Public Declare Function FSOUND_GetDriverName Lib "fmod.dll" Alias "_FSOUND_GetDriverName@4" (ByVal id As Long) As Long
-Public Declare Function FSOUND_GetDriverCaps Lib "fmod.dll" Alias "_FSOUND_GetDriverCaps@8" (ByVal id As Long, ByRef caps As Long) As Byte
+Public Declare Function FSOUND_GetDriverName Lib "fmod.dll" Alias "_FSOUND_GetDriverName@4" (ByVal ID As Long) As Long
+Public Declare Function FSOUND_GetDriverCaps Lib "fmod.dll" Alias "_FSOUND_GetDriverCaps@8" (ByVal ID As Long, ByRef caps As Long) As Byte
 Public Declare Function FSOUND_GetOutputRate Lib "fmod.dll" Alias "_FSOUND_GetOutputRate@0" () As Long
 Public Declare Function FSOUND_GetMaxChannels Lib "fmod.dll" Alias "_FSOUND_GetMaxChannels@0" () As Long
 Public Declare Function FSOUND_GetMaxSamples Lib "fmod.dll" Alias "_FSOUND_GetMaxSamples@0" () As Long
@@ -481,18 +464,18 @@ Public Declare Sub FSOUND_GetMemoryStats Lib "fmod.dll" Alias "_FSOUND_GetMemory
 '          Use FSOUND_LOADRAW      flag with FSOUND_Sample_Load to treat as as raw pcm data.
 
 
-Public Declare Function FSOUND_Sample_Load Lib "fmod.dll" Alias "_FSOUND_Sample_Load@20" (ByVal Index As Long, ByVal name As String, ByVal mode As FSOUND_MODES, ByVal offset As Long, ByVal length As Long) As Long
-Public Declare Function FSOUND_Sample_Alloc Lib "fmod.dll" Alias "_FSOUND_Sample_Alloc@28" (ByVal Index As Long, ByVal length As Long, ByVal mode As Long, ByVal deffreq As Long, ByVal defvol As Long, ByVal defpan As Long, ByVal defpri As Long) As Long
+Public Declare Function FSOUND_Sample_Load Lib "fmod.dll" Alias "_FSOUND_Sample_Load@20" (ByVal Index As Long, ByVal Name As String, ByVal Mode As FSOUND_MODES, ByVal offset As Long, ByVal Length As Long) As Long
+Public Declare Function FSOUND_Sample_Alloc Lib "fmod.dll" Alias "_FSOUND_Sample_Alloc@28" (ByVal Index As Long, ByVal Length As Long, ByVal Mode As Long, ByVal deffreq As Long, ByVal defvol As Long, ByVal defpan As Long, ByVal defpri As Long) As Long
 Public Declare Function FSOUND_Sample_Free Lib "fmod.dll" Alias "_FSOUND_Sample_Free@4" (ByVal sptr As Long) As Long
-Public Declare Function FSOUND_Sample_Upload Lib "fmod.dll" Alias "_FSOUND_Sample_Upload@12" (ByVal sptr As Long, ByRef srcdata As Long, ByVal mode As Long) As Byte
-Public Declare Function FSOUND_Sample_Lock Lib "fmod.dll" Alias "_FSOUND_Sample_Lock@28" (ByVal sptr As Long, ByVal offset As Long, ByVal length As Long, ByRef ptr1 As Long, ByRef ptr2 As Long, ByRef len1 As Long, ByRef len2 As Long) As Byte
+Public Declare Function FSOUND_Sample_Upload Lib "fmod.dll" Alias "_FSOUND_Sample_Upload@12" (ByVal sptr As Long, ByRef srcdata As Long, ByVal Mode As Long) As Byte
+Public Declare Function FSOUND_Sample_Lock Lib "fmod.dll" Alias "_FSOUND_Sample_Lock@28" (ByVal sptr As Long, ByVal offset As Long, ByVal Length As Long, ByRef ptr1 As Long, ByRef ptr2 As Long, ByRef len1 As Long, ByRef len2 As Long) As Byte
 Public Declare Function FSOUND_Sample_Unlock Lib "fmod.dll" Alias "_FSOUND_Sample_Unlock@20" (ByVal sptr As Long, ByVal sptr1 As Long, ByVal sptr2 As Long, ByVal len1 As Long, ByVal len2 As Long) As Byte
 
 
 '   Sample control functions
 
 
-Public Declare Function FSOUND_Sample_SetMode Lib "fmod.dll" Alias "_FSOUND_Sample_SetMode@8" (ByVal sptr As Long, ByVal mode As FSOUND_MODES) As Byte
+Public Declare Function FSOUND_Sample_SetMode Lib "fmod.dll" Alias "_FSOUND_Sample_SetMode@8" (ByVal sptr As Long, ByVal Mode As FSOUND_MODES) As Byte
 Public Declare Function FSOUND_Sample_SetLoopPoints Lib "fmod.dll" Alias "_FSOUND_Sample_SetLoopPoints@12" (ByVal sptr As Long, ByVal loopstart As Long, ByVal loopend As Long) As Byte
 Public Declare Function FSOUND_Sample_SetDefaults Lib "fmod.dll" Alias "_FSOUND_Sample_SetDefaults@20" (ByVal sptr As Long, ByVal deffreq As Long, ByVal defvol As Long, ByVal defpan As Long, ByVal defpri As Long) As Byte
 Public Declare Function FSOUND_Sample_SetDefaultsEx Lib "fmod.dll" Alias "_FSOUND_Sample_SetDefaultsEx@32" (ByVal sptr As Long, ByVal deffreq As Long, ByVal defvol As Long, ByVal defpan As Long, ByVal defpri As Long, ByVal varfreq As Long, ByVal varvol As Long, ByVal varpan As Long) As Byte
@@ -522,51 +505,51 @@ Public Declare Function FSOUND_Sample_GetMinMaxDistance Lib "fmod.dll" Alias "_F
 '          Use FSOUND_ALL as the channel variable to control ALL channels with one function call!
 
 
-Public Declare Function FSOUND_PlaySound Lib "fmod.dll" Alias "_FSOUND_PlaySound@8" (ByVal channel As Long, ByVal sptr As Long) As Long
-Public Declare Function FSOUND_PlaySoundEx Lib "fmod.dll" Alias "_FSOUND_PlaySoundEx@16" (ByVal channel As Long, ByVal sptr As Long, ByVal dsp As Long, ByVal startpaused As Byte) As Long
-Public Declare Function FSOUND_StopSound Lib "fmod.dll" Alias "_FSOUND_StopSound@4" (ByVal channel As Long) As Byte
+Public Declare Function FSOUND_PlaySound Lib "fmod.dll" Alias "_FSOUND_PlaySound@8" (ByVal Channel As Long, ByVal sptr As Long) As Long
+Public Declare Function FSOUND_PlaySoundEx Lib "fmod.dll" Alias "_FSOUND_PlaySoundEx@16" (ByVal Channel As Long, ByVal sptr As Long, ByVal dsp As Long, ByVal startpaused As Byte) As Long
+Public Declare Function FSOUND_StopSound Lib "fmod.dll" Alias "_FSOUND_StopSound@4" (ByVal Channel As Long) As Byte
 
 
 '   Functions to control playback of a channel.
 '   Note : FSOUND_ALL can be used on most of these functions as a channel value.
 
 
-Public Declare Function FSOUND_SetFrequency Lib "fmod.dll" Alias "_FSOUND_SetFrequency@8" (ByVal channel As Long, ByVal freq As Long) As Byte
-Public Declare Function FSOUND_SetVolume Lib "fmod.dll" Alias "_FSOUND_SetVolume@8" (ByVal channel As Long, ByVal Vol As Long) As Byte
-Public Declare Function FSOUND_SetVolumeAbsolute Lib "fmod.dll" Alias "_FSOUND_SetVolumeAbsolute@8" (ByVal channel As Long, ByVal Vol As Long) As Byte
-Public Declare Function FSOUND_SetPan Lib "fmod.dll" Alias "_FSOUND_SetPan@8" (ByVal channel As Long, ByVal pan As Long) As Byte
-Public Declare Function FSOUND_SetSurround Lib "fmod.dll" Alias "_FSOUND_SetSurround@8" (ByVal channel As Long, ByVal surround As Long) As Byte
-Public Declare Function FSOUND_SetMute Lib "fmod.dll" Alias "_FSOUND_SetMute@8" (ByVal channel As Long, ByVal mute As Byte) As Byte
-Public Declare Function FSOUND_SetPriority Lib "fmod.dll" Alias "_FSOUND_SetPriority@8" (ByVal channel As Long, ByVal Priority As Long) As Byte
-Public Declare Function FSOUND_SetReserved Lib "fmod.dll" Alias "_FSOUND_SetReserved@8" (ByVal channel As Long, ByVal reserved As Long) As Byte
-Public Declare Function FSOUND_SetPaused Lib "fmod.dll" Alias "_FSOUND_SetPaused@8" (ByVal channel As Long, ByVal Paused As Byte) As Byte
-Public Declare Function FSOUND_SetLoopMode Lib "fmod.dll" Alias "_FSOUND_SetLoopMode@8" (ByVal channel As Long, ByVal loopmode As Long) As Byte
-Public Declare Function FSOUND_SetCurrentPosition Lib "fmod.dll" Alias "_FSOUND_SetCurrentPosition@8" (ByVal channel As Long, ByVal offset As Long) As Byte
-Public Declare Function FSOUND_3D_SetAttributes Lib "fmod.dll" Alias "_FSOUND_3D_SetAttributes@12" (ByVal channel As Long, ByRef Pos As Single, ByRef vel As Single) As Byte
-Public Declare Function FSOUND_3D_SetMinMaxDistance Lib "fmod.dll" Alias "_FSOUND_3D_SetMinMaxDistance@12" (ByVal channel As Long, ByVal min As Single, ByVal max As Single) As Byte
+Public Declare Function FSOUND_SetFrequency Lib "fmod.dll" Alias "_FSOUND_SetFrequency@8" (ByVal Channel As Long, ByVal freq As Long) As Byte
+Public Declare Function FSOUND_SetVolume Lib "fmod.dll" Alias "_FSOUND_SetVolume@8" (ByVal Channel As Long, ByVal Vol As Long) As Byte
+Public Declare Function FSOUND_SetVolumeAbsolute Lib "fmod.dll" Alias "_FSOUND_SetVolumeAbsolute@8" (ByVal Channel As Long, ByVal Vol As Long) As Byte
+Public Declare Function FSOUND_SetPan Lib "fmod.dll" Alias "_FSOUND_SetPan@8" (ByVal Channel As Long, ByVal pan As Long) As Byte
+Public Declare Function FSOUND_SetSurround Lib "fmod.dll" Alias "_FSOUND_SetSurround@8" (ByVal Channel As Long, ByVal surround As Long) As Byte
+Public Declare Function FSOUND_SetMute Lib "fmod.dll" Alias "_FSOUND_SetMute@8" (ByVal Channel As Long, ByVal mute As Byte) As Byte
+Public Declare Function FSOUND_SetPriority Lib "fmod.dll" Alias "_FSOUND_SetPriority@8" (ByVal Channel As Long, ByVal Priority As Long) As Byte
+Public Declare Function FSOUND_SetReserved Lib "fmod.dll" Alias "_FSOUND_SetReserved@8" (ByVal Channel As Long, ByVal reserved As Long) As Byte
+Public Declare Function FSOUND_SetPaused Lib "fmod.dll" Alias "_FSOUND_SetPaused@8" (ByVal Channel As Long, ByVal Paused As Byte) As Byte
+Public Declare Function FSOUND_SetLoopMode Lib "fmod.dll" Alias "_FSOUND_SetLoopMode@8" (ByVal Channel As Long, ByVal loopmode As Long) As Byte
+Public Declare Function FSOUND_SetCurrentPosition Lib "fmod.dll" Alias "_FSOUND_SetCurrentPosition@8" (ByVal Channel As Long, ByVal offset As Long) As Byte
+Public Declare Function FSOUND_3D_SetAttributes Lib "fmod.dll" Alias "_FSOUND_3D_SetAttributes@12" (ByVal Channel As Long, ByRef Pos As Single, ByRef vel As Single) As Byte
+Public Declare Function FSOUND_3D_SetMinMaxDistance Lib "fmod.dll" Alias "_FSOUND_3D_SetMinMaxDistance@12" (ByVal Channel As Long, ByVal min As Single, ByVal max As Single) As Byte
 
 '
 '   Channel information functions.
 '
 
-Public Declare Function FSOUND_IsPlaying Lib "fmod.dll" Alias "_FSOUND_IsPlaying@4" (ByVal channel As Long) As Byte
-Public Declare Function FSOUND_GetFrequency Lib "fmod.dll" Alias "_FSOUND_GetFrequency@4" (ByVal channel As Long) As Long
-Public Declare Function FSOUND_GetVolume Lib "fmod.dll" Alias "_FSOUND_GetVolume@4" (ByVal channel As Long) As Long
-Public Declare Function FSOUND_GetAmplitude Lib "fmod.dll" Alias "_FSOUND_GetAmplitude@4" (ByVal channel As Long) As Long
-Public Declare Function FSOUND_GetPan Lib "fmod.dll" Alias "_FSOUND_GetPan@4" (ByVal channel As Long) As Long
-Public Declare Function FSOUND_GetSurround Lib "fmod.dll" Alias "_FSOUND_GetSurround@4" (ByVal channel As Long) As Byte
-Public Declare Function FSOUND_GetMute Lib "fmod.dll" Alias "_FSOUND_GetMute@4" (ByVal channel As Long) As Byte
-Public Declare Function FSOUND_GetPriority Lib "fmod.dll" Alias "_FSOUND_GetPriority@4" (ByVal channel As Long) As Long
-Public Declare Function FSOUND_GetReserved Lib "fmod.dll" Alias "_FSOUND_GetReserved@4" (ByVal channel As Long) As Byte
-Public Declare Function FSOUND_GetPaused Lib "fmod.dll" Alias "_FSOUND_GetPaused@4" (ByVal channel As Long) As Byte
-Public Declare Function FSOUND_GetLoopMode Lib "fmod.dll" Alias "_FSOUND_GetLoopMode@4" (ByVal channel As Long) As Long
-Public Declare Function FSOUND_GetCurrentPosition Lib "fmod.dll" Alias "_FSOUND_GetCurrentPosition@4" (ByVal channel As Long) As Long
-Public Declare Function FSOUND_GetCurrentSample Lib "fmod.dll" Alias "_FSOUND_GetCurrentSample@4" (ByVal channel As Long) As Long
-Public Declare Function FSOUND_GetCurrentLevels Lib "fmod.dll" Alias "_FSOUND_GetCurrentLevels@12" (ByVal channel As Long, ByRef l As Single, ByRef r As Single) As Byte
-Public Declare Function FSOUND_GetNumSubChannels Lib "fmod.dll" Alias "_FSOUND_GetNumSubChannels@4" (ByVal channel As Long) As Long
-Public Declare Function FSOUND_GetSubChannel Lib "fmod.dll" Alias "_FSOUND_GetSubChannel@8" (ByVal channel As Long, ByVal subchannel As Long) As Long
-Public Declare Function FSOUND_3D_GetAttributes Lib "fmod.dll" Alias "_FSOUND_3D_GetAttributes@12" (ByVal channel As Long, ByRef Pos As Single, ByRef vel As Single) As Byte
-Public Declare Function FSOUND_3D_GetMinMaxDistance Lib "fmod.dll" Alias "_FSOUND_3D_GetMinMaxDistance@12" (ByVal channel As Long, ByRef min As Single, ByRef max As Single) As Byte
+Public Declare Function FSOUND_IsPlaying Lib "fmod.dll" Alias "_FSOUND_IsPlaying@4" (ByVal Channel As Long) As Byte
+Public Declare Function FSOUND_GetFrequency Lib "fmod.dll" Alias "_FSOUND_GetFrequency@4" (ByVal Channel As Long) As Long
+Public Declare Function FSOUND_GetVolume Lib "fmod.dll" Alias "_FSOUND_GetVolume@4" (ByVal Channel As Long) As Long
+Public Declare Function FSOUND_GetAmplitude Lib "fmod.dll" Alias "_FSOUND_GetAmplitude@4" (ByVal Channel As Long) As Long
+Public Declare Function FSOUND_GetPan Lib "fmod.dll" Alias "_FSOUND_GetPan@4" (ByVal Channel As Long) As Long
+Public Declare Function FSOUND_GetSurround Lib "fmod.dll" Alias "_FSOUND_GetSurround@4" (ByVal Channel As Long) As Byte
+Public Declare Function FSOUND_GetMute Lib "fmod.dll" Alias "_FSOUND_GetMute@4" (ByVal Channel As Long) As Byte
+Public Declare Function FSOUND_GetPriority Lib "fmod.dll" Alias "_FSOUND_GetPriority@4" (ByVal Channel As Long) As Long
+Public Declare Function FSOUND_GetReserved Lib "fmod.dll" Alias "_FSOUND_GetReserved@4" (ByVal Channel As Long) As Byte
+Public Declare Function FSOUND_GetPaused Lib "fmod.dll" Alias "_FSOUND_GetPaused@4" (ByVal Channel As Long) As Byte
+Public Declare Function FSOUND_GetLoopMode Lib "fmod.dll" Alias "_FSOUND_GetLoopMode@4" (ByVal Channel As Long) As Long
+Public Declare Function FSOUND_GetCurrentPosition Lib "fmod.dll" Alias "_FSOUND_GetCurrentPosition@4" (ByVal Channel As Long) As Long
+Public Declare Function FSOUND_GetCurrentSample Lib "fmod.dll" Alias "_FSOUND_GetCurrentSample@4" (ByVal Channel As Long) As Long
+Public Declare Function FSOUND_GetCurrentLevels Lib "fmod.dll" Alias "_FSOUND_GetCurrentLevels@12" (ByVal Channel As Long, ByRef l As Single, ByRef R As Single) As Byte
+Public Declare Function FSOUND_GetNumSubChannels Lib "fmod.dll" Alias "_FSOUND_GetNumSubChannels@4" (ByVal Channel As Long) As Long
+Public Declare Function FSOUND_GetSubChannel Lib "fmod.dll" Alias "_FSOUND_GetSubChannel@8" (ByVal Channel As Long, ByVal subchannel As Long) As Long
+Public Declare Function FSOUND_3D_GetAttributes Lib "fmod.dll" Alias "_FSOUND_3D_GetAttributes@12" (ByVal Channel As Long, ByRef Pos As Single, ByRef vel As Single) As Byte
+Public Declare Function FSOUND_3D_GetMinMaxDistance Lib "fmod.dll" Alias "_FSOUND_3D_GetMinMaxDistance@12" (ByVal Channel As Long, ByRef min As Single, ByRef max As Single) As Byte
 
 '/* ========================== */
 '/* Global 3D sound functions. */
@@ -602,8 +585,8 @@ Public Declare Function FSOUND_3D_SetRolloffFactor Lib "fmod.dll" Alias "_FSOUND
 '   - FSOUND_FX_Disable must be called to reset/clear the FX from a channel.
 
 
-Public Declare Function FSOUND_FX_Enable Lib "fmod.dll" Alias "_FSOUND_FX_Enable@8" (ByVal channel As Long, ByVal fx As FSOUND_FX_MODES) As Long
-Public Declare Function FSOUND_FX_Disable Lib "fmod.dll" Alias "_FSOUND_FX_Disable@4" (ByVal channel As Long) As Byte
+Public Declare Function FSOUND_FX_Enable Lib "fmod.dll" Alias "_FSOUND_FX_Enable@8" (ByVal Channel As Long, ByVal fx As FSOUND_FX_MODES) As Long
+Public Declare Function FSOUND_FX_Disable Lib "fmod.dll" Alias "_FSOUND_FX_Disable@4" (ByVal Channel As Long) As Byte
 
 Public Declare Function FSOUND_FX_SetChorus Lib "fmod.dll" Alias "_FSOUND_FX_SetChorus@32" (ByVal fxid As Long, ByVal WetDryMix As Single, ByVal Depth As Single, ByVal Feedback As Single, ByVal Frequency As Single, ByVal Waveform As Long, ByVal Delay As Single, ByVal Phase As Long) As Byte
 Public Declare Function FSOUND_FX_SetCompressor Lib "fmod.dll" Alias "_FSOUND_FX_SetCompressor@28" (ByVal fxid As Long, ByVal Gain As Single, ByVal Attack As Single, ByVal Release As Single, ByVal Threshold As Single, ByVal Ratio As Single, ByVal Predelay As Single) As Byte
@@ -628,46 +611,46 @@ Public Declare Function FSOUND_FX_SetWavesReverb Lib "fmod.dll" Alias "_FSOUND_F
 
 Public Declare Function FSOUND_Stream_SetBufferSize Lib "fmod.dll" Alias "_FSOUND_Stream_SetBufferSize@4" (ByVal ms As Long) As Byte
 
-Public Declare Function FSOUND_Stream_Open Lib "fmod.dll" Alias "_FSOUND_Stream_Open@16" (ByVal filename As String, ByVal mode As FSOUND_MODES, ByVal offset As Long, ByVal length As Long) As Long
-Public Declare Function FSOUND_Stream_Open2 Lib "fmod.dll" Alias "_FSOUND_Stream_Open@16" (ByRef data As Byte, ByVal mode As FSOUND_MODES, ByVal offset As Long, ByVal length As Long) As Long
-Public Declare Function FSOUND_Stream_Create Lib "fmod.dll" Alias "_FSOUND_Stream_Create@20" (ByVal callback As Long, ByVal length As Long, ByVal mode As Long, ByVal samplerate As Long, ByVal userdata As Long) As Long
-Public Declare Function FSOUND_Stream_Close Lib "fmod.dll" Alias "_FSOUND_Stream_Close@4" (ByVal stream As Long) As Byte
+Public Declare Function FSOUND_Stream_Open Lib "fmod.dll" Alias "_FSOUND_Stream_Open@16" (ByVal FileName As String, ByVal Mode As FSOUND_MODES, ByVal offset As Long, ByVal Length As Long) As Long
+Public Declare Function FSOUND_Stream_Open2 Lib "fmod.dll" Alias "_FSOUND_Stream_Open@16" (ByRef Data As Byte, ByVal Mode As FSOUND_MODES, ByVal offset As Long, ByVal Length As Long) As Long
+Public Declare Function FSOUND_Stream_Create Lib "fmod.dll" Alias "_FSOUND_Stream_Create@20" (ByVal Callback As Long, ByVal Length As Long, ByVal Mode As Long, ByVal samplerate As Long, ByVal userdata As Long) As Long
+Public Declare Function FSOUND_Stream_Close Lib "fmod.dll" Alias "_FSOUND_Stream_Close@4" (ByVal Stream As Long) As Byte
 
-Public Declare Function FSOUND_Stream_Play Lib "fmod.dll" Alias "_FSOUND_Stream_Play@8" (ByVal channel As Long, ByVal stream As Long) As Long
-Public Declare Function FSOUND_Stream_PlayEx Lib "fmod.dll" Alias "_FSOUND_Stream_PlayEx@16" (ByVal channel As Long, ByVal stream As Long, ByVal dsp As Long, ByVal startpaused As Byte) As Long
-Public Declare Function FSOUND_Stream_Stop Lib "fmod.dll" Alias "_FSOUND_Stream_Stop@4" (ByVal stream As Long) As Byte
+Public Declare Function FSOUND_Stream_Play Lib "fmod.dll" Alias "_FSOUND_Stream_Play@8" (ByVal Channel As Long, ByVal Stream As Long) As Long
+Public Declare Function FSOUND_Stream_PlayEx Lib "fmod.dll" Alias "_FSOUND_Stream_PlayEx@16" (ByVal Channel As Long, ByVal Stream As Long, ByVal dsp As Long, ByVal startpaused As Byte) As Long
+Public Declare Function FSOUND_Stream_Stop Lib "fmod.dll" Alias "_FSOUND_Stream_Stop@4" (ByVal Stream As Long) As Byte
 
-Public Declare Function FSOUND_Stream_SetPosition Lib "fmod.dll" Alias "_FSOUND_Stream_SetPosition@8" (ByVal stream As Long, ByVal positition As Long) As Byte
-Public Declare Function FSOUND_Stream_GetPosition Lib "fmod.dll" Alias "_FSOUND_Stream_GetPosition@4" (ByVal stream As Long) As Long
-Public Declare Function FSOUND_Stream_SetTime Lib "fmod.dll" Alias "_FSOUND_Stream_SetTime@8" (ByVal stream As Long, ByVal ms As Long) As Byte
-Public Declare Function FSOUND_Stream_GetTime Lib "fmod.dll" Alias "_FSOUND_Stream_GetTime@4" (ByVal stream As Long) As Long
-Public Declare Function FSOUND_Stream_GetLength Lib "fmod.dll" Alias "_FSOUND_Stream_GetLength@4" (ByVal stream As Long) As Long
-Public Declare Function FSOUND_Stream_GetLengthMs Lib "fmod.dll" Alias "_FSOUND_Stream_GetLengthMs@4" (ByVal stream As Long) As Long
+Public Declare Function FSOUND_Stream_SetPosition Lib "fmod.dll" Alias "_FSOUND_Stream_SetPosition@8" (ByVal Stream As Long, ByVal positition As Long) As Byte
+Public Declare Function FSOUND_Stream_GetPosition Lib "fmod.dll" Alias "_FSOUND_Stream_GetPosition@4" (ByVal Stream As Long) As Long
+Public Declare Function FSOUND_Stream_SetTime Lib "fmod.dll" Alias "_FSOUND_Stream_SetTime@8" (ByVal Stream As Long, ByVal ms As Long) As Byte
+Public Declare Function FSOUND_Stream_GetTime Lib "fmod.dll" Alias "_FSOUND_Stream_GetTime@4" (ByVal Stream As Long) As Long
+Public Declare Function FSOUND_Stream_GetLength Lib "fmod.dll" Alias "_FSOUND_Stream_GetLength@4" (ByVal Stream As Long) As Long
+Public Declare Function FSOUND_Stream_GetLengthMs Lib "fmod.dll" Alias "_FSOUND_Stream_GetLengthMs@4" (ByVal Stream As Long) As Long
 
-Public Declare Function FSOUND_Stream_SetMode Lib "fmod.dll" Alias "_FSOUND_Stream_SetMode@8" (ByVal stream As Long, ByVal mode As Long) As Byte
-Public Declare Function FSOUND_Stream_GetMode Lib "fmod.dll" Alias "_FSOUND_Stream_GetMode@4" (ByVal stream As Long) As Long
-Public Declare Function FSOUND_Stream_SetLoopPoints Lib "fmod.dll" Alias "_FSOUND_Stream_SetLoopPoints@12" (ByVal stream As Long, ByVal loopstartpcm As Long, ByVal loopendpcm As Long) As Byte
-Public Declare Function FSOUND_Stream_SetLoopCount Lib "fmod.dll" Alias "_FSOUND_Stream_SetLoopCount@8" (ByVal stream As Long, ByVal count As Long) As Byte
-Public Declare Function FSOUND_Stream_GetOpenState Lib "fmod.dll" Alias "_FSOUND_Stream_GetOpenState@4" (ByVal stream As Long) As Long
-Public Declare Function FSOUND_Stream_GetSample Lib "fmod.dll" Alias "_FSOUND_Stream_GetSample@4" (ByVal stream As Long) As Long
-Public Declare Function FSOUND_Stream_CreateDSP Lib "fmod.dll" Alias "_FSOUND_Stream_CreateDSP@16" (ByVal stream As Long, ByVal callback As Long, ByVal Priority As Long, ByVal userdata As Long) As Long
+Public Declare Function FSOUND_Stream_SetMode Lib "fmod.dll" Alias "_FSOUND_Stream_SetMode@8" (ByVal Stream As Long, ByVal Mode As Long) As Byte
+Public Declare Function FSOUND_Stream_GetMode Lib "fmod.dll" Alias "_FSOUND_Stream_GetMode@4" (ByVal Stream As Long) As Long
+Public Declare Function FSOUND_Stream_SetLoopPoints Lib "fmod.dll" Alias "_FSOUND_Stream_SetLoopPoints@12" (ByVal Stream As Long, ByVal loopstartpcm As Long, ByVal loopendpcm As Long) As Byte
+Public Declare Function FSOUND_Stream_SetLoopCount Lib "fmod.dll" Alias "_FSOUND_Stream_SetLoopCount@8" (ByVal Stream As Long, ByVal Count As Long) As Byte
+Public Declare Function FSOUND_Stream_GetOpenState Lib "fmod.dll" Alias "_FSOUND_Stream_GetOpenState@4" (ByVal Stream As Long) As Long
+Public Declare Function FSOUND_Stream_GetSample Lib "fmod.dll" Alias "_FSOUND_Stream_GetSample@4" (ByVal Stream As Long) As Long
+Public Declare Function FSOUND_Stream_CreateDSP Lib "fmod.dll" Alias "_FSOUND_Stream_CreateDSP@16" (ByVal Stream As Long, ByVal Callback As Long, ByVal Priority As Long, ByVal userdata As Long) As Long
 
-Public Declare Function FSOUND_Stream_SetEndCallback Lib "fmod.dll" Alias "_FSOUND_Stream_SetEndCallback@12" (ByVal stream As Long, ByVal callback As Long, ByVal userdata As Long) As Byte
-Public Declare Function FSOUND_Stream_SetSyncCallback Lib "fmod.dll" Alias "_FSOUND_Stream_SetSyncCallback@12" (ByVal stream As Long, ByVal callback As Long, ByVal userdata As Long) As Byte
+Public Declare Function FSOUND_Stream_SetEndCallback Lib "fmod.dll" Alias "_FSOUND_Stream_SetEndCallback@12" (ByVal Stream As Long, ByVal Callback As Long, ByVal userdata As Long) As Byte
+Public Declare Function FSOUND_Stream_SetSyncCallback Lib "fmod.dll" Alias "_FSOUND_Stream_SetSyncCallback@12" (ByVal Stream As Long, ByVal Callback As Long, ByVal userdata As Long) As Byte
 
-Public Declare Function FSOUND_Stream_AddSyncPoint Lib "fmod.dll" Alias "_FSOUND_Stream_AddSyncPoint@12" (ByVal stream As Long, ByVal pcmoffset As Long, ByVal name As String) As Long
+Public Declare Function FSOUND_Stream_AddSyncPoint Lib "fmod.dll" Alias "_FSOUND_Stream_AddSyncPoint@12" (ByVal Stream As Long, ByVal pcmoffset As Long, ByVal Name As String) As Long
 Public Declare Function FSOUND_Stream_DeleteSyncPoint Lib "fmod.dll" Alias "_FSOUND_Stream_DeleteSyncPoint@4" (ByVal point As Long) As Byte
-Public Declare Function FSOUND_Stream_GetNumSyncPoints Lib "fmod.dll" Alias "_FSOUND_Stream_GetNumSyncPoints@4" (ByVal stream As Long) As Long
-Public Declare Function FSOUND_Stream_GetSyncPoint Lib "fmod.dll" Alias "_FSOUND_Stream_GetSyncPoint@8" (ByVal stream As Long, ByVal Index As Long) As Long
+Public Declare Function FSOUND_Stream_GetNumSyncPoints Lib "fmod.dll" Alias "_FSOUND_Stream_GetNumSyncPoints@4" (ByVal Stream As Long) As Long
+Public Declare Function FSOUND_Stream_GetSyncPoint Lib "fmod.dll" Alias "_FSOUND_Stream_GetSyncPoint@8" (ByVal Stream As Long, ByVal Index As Long) As Long
 Public Declare Function FSOUND_Stream_GetSyncPointInfo Lib "fmod.dll" Alias "_FSOUND_Stream_GetSyncPointInfo@8" (ByVal point As Long, ByRef pcmoffset As Long) As Long
 
-Public Declare Function FSOUND_Stream_SetSubStream Lib "fmod.dll" Alias "_FSOUND_Stream_SetSubStream@8" (ByVal stream As Long, ByVal Index As Long) As Byte
-Public Declare Function FSOUND_Stream_GetNumSubStreams Lib "fmod.dll" Alias "_FSOUND_Stream_GetNumSubStreams@4" (ByVal stream As Long) As Long
-Public Declare Function FSOUND_Stream_SetSubStreamSentence Lib "fmod.dll" Alias "_FSOUND_Stream_SetSubStreamSentence@12" (ByVal stream As Long, ByRef sentencelist As Long, ByVal numitems As Long) As Byte
+Public Declare Function FSOUND_Stream_SetSubStream Lib "fmod.dll" Alias "_FSOUND_Stream_SetSubStream@8" (ByVal Stream As Long, ByVal Index As Long) As Byte
+Public Declare Function FSOUND_Stream_GetNumSubStreams Lib "fmod.dll" Alias "_FSOUND_Stream_GetNumSubStreams@4" (ByVal Stream As Long) As Long
+Public Declare Function FSOUND_Stream_SetSubStreamSentence Lib "fmod.dll" Alias "_FSOUND_Stream_SetSubStreamSentence@12" (ByVal Stream As Long, ByRef sentencelist As Long, ByVal numitems As Long) As Byte
 
-Public Declare Function FSOUND_Stream_GetNumTagFields Lib "fmod.dll" Alias "_FSOUND_Stream_GetNumTagFields@8" (ByVal stream As Long, ByRef num As Long) As Byte
-Public Declare Function FSOUND_Stream_GetTagField Lib "fmod.dll" Alias "_FSOUND_Stream_GetTagField@24" (ByVal stream As Long, ByVal num As Long, ByRef tagtype As Long, ByRef name As Long, ByRef value As Long, ByRef length As Long) As Byte
-Public Declare Function FSOUND_Stream_FindTagField Lib "fmod.dll" Alias "_FSOUND_Stream_FindTagField@20" (ByVal stream As Long, ByVal tagtype As Long, ByVal name As String, ByRef value As Long, ByRef length As Long) As Byte
+Public Declare Function FSOUND_Stream_GetNumTagFields Lib "fmod.dll" Alias "_FSOUND_Stream_GetNumTagFields@8" (ByVal Stream As Long, ByRef Num As Long) As Byte
+Public Declare Function FSOUND_Stream_GetTagField Lib "fmod.dll" Alias "_FSOUND_Stream_GetTagField@24" (ByVal Stream As Long, ByVal Num As Long, ByRef tagtype As Long, ByRef Name As Long, ByRef Value As Long, ByRef Length As Long) As Byte
+Public Declare Function FSOUND_Stream_FindTagField Lib "fmod.dll" Alias "_FSOUND_Stream_FindTagField@20" (ByVal Stream As Long, ByVal tagtype As Long, ByVal Name As String, ByRef Value As Long, ByRef Length As Long) As Byte
 
 '
 '   Internet streaming functions
@@ -675,10 +658,10 @@ Public Declare Function FSOUND_Stream_FindTagField Lib "fmod.dll" Alias "_FSOUND
 
 Public Declare Function FSOUND_Stream_Net_SetProxy Lib "fmod.dll" Alias "_FSOUND_Stream_Net_SetProxy@4" (ByVal proxy As String) As Byte
 Public Declare Function FSOUND_Stream_Net_GetLastServerStatus Lib "fmod.dll" Alias "_FSOUND_Stream_Net_GetLastServerStatus@0" () As Long
-Public Declare Function FSOUND_Stream_Net_SetBufferProperties Lib "fmod.dll" Alias "_FSOUND_Stream_Net_SetBufferProperties@12" (ByVal buffersize As Long, ByVal prebuffer_percent As Long, ByVal rebuffer_percent As Long) As Byte
-Public Declare Function FSOUND_Stream_Net_GetBufferProperties Lib "fmod.dll" Alias "_FSOUND_Stream_Net_GetBufferProperties@12" (ByRef buffersize As Long, ByRef prebuffer_percent As Long, ByRef rebuffer_percent As Long) As Byte
-Public Declare Function FSOUND_Stream_Net_SetMetadataCallback Lib "fmod.dll" Alias "_FSOUND_Stream_Net_SetMetadataCallback@12" (ByVal stream As Long, ByVal callback As Long, ByVal userdata As Long) As Byte
-Public Declare Function FSOUND_Stream_Net_GetStatus Lib "fmod.dll" Alias "_FSOUND_Stream_Net_GetStatus@20" (ByVal stream As Long, ByRef status As Long, ByRef bufferpercentused As Long, ByRef bitrate As Long, ByRef flags As Long) As Byte
+Public Declare Function FSOUND_Stream_Net_SetBufferProperties Lib "fmod.dll" Alias "_FSOUND_Stream_Net_SetBufferProperties@12" (ByVal BufferSize As Long, ByVal prebuffer_percent As Long, ByVal rebuffer_percent As Long) As Byte
+Public Declare Function FSOUND_Stream_Net_GetBufferProperties Lib "fmod.dll" Alias "_FSOUND_Stream_Net_GetBufferProperties@12" (ByRef BufferSize As Long, ByRef prebuffer_percent As Long, ByRef rebuffer_percent As Long) As Byte
+Public Declare Function FSOUND_Stream_Net_SetMetadataCallback Lib "fmod.dll" Alias "_FSOUND_Stream_Net_SetMetadataCallback@12" (ByVal Stream As Long, ByVal Callback As Long, ByVal userdata As Long) As Byte
+Public Declare Function FSOUND_Stream_Net_GetStatus Lib "fmod.dll" Alias "_FSOUND_Stream_Net_GetStatus@20" (ByVal Stream As Long, ByRef Status As Long, ByRef bufferpercentused As Long, ByRef bitrate As Long, ByRef Flags As Long) As Byte
 
 '/* =================== */
 '/* CD audio functions. */
@@ -689,7 +672,7 @@ Public Declare Function FSOUND_Stream_Net_GetStatus Lib "fmod.dll" Alias "_FSOUN
 
 
 Public Declare Function FSOUND_CD_Play Lib "fmod.dll" Alias "_FSOUND_CD_Play@8" (ByVal drive As Byte, ByVal Track As Long) As Byte
-Public Declare Function FSOUND_CD_SetPlayMode Lib "fmod.dll" Alias "_FSOUND_CD_SetPlayMode@8" (ByVal drive As Byte, ByVal mode As FSOUND_CDPLAYMODES) As Long
+Public Declare Function FSOUND_CD_SetPlayMode Lib "fmod.dll" Alias "_FSOUND_CD_SetPlayMode@8" (ByVal drive As Byte, ByVal Mode As FSOUND_CDPLAYMODES) As Long
 Public Declare Function FSOUND_CD_Stop Lib "fmod.dll" Alias "_FSOUND_CD_Stop@4" (ByVal drive As Byte) As Byte
 Public Declare Function FSOUND_CD_SetPaused Lib "fmod.dll" Alias "_FSOUND_CD_SetPaused@8" (ByVal drive As Byte, ByVal Paused As Byte) As Byte
 Public Declare Function FSOUND_CD_SetVolume Lib "fmod.dll" Alias "_FSOUND_CD_SetVolume@8" (ByVal drive As Byte, ByVal volume As Long) As Byte
@@ -712,7 +695,7 @@ Public Declare Function FSOUND_CD_GetTrackTime Lib "fmod.dll" Alias "_FSOUND_CD_
 '   These functions allow you access to the mixed stream that FMOD uses to play back sound on.
 
 
-Public Declare Function FSOUND_DSP_Create Lib "fmod.dll" Alias "_FSOUND_DSP_Create@12" (ByVal callback As Long, ByVal Priority As Long, ByVal param As Long) As Long
+Public Declare Function FSOUND_DSP_Create Lib "fmod.dll" Alias "_FSOUND_DSP_Create@12" (ByVal Callback As Long, ByVal Priority As Long, ByVal param As Long) As Long
 Public Declare Function FSOUND_DSP_Free Lib "fmod.dll" Alias "_FSOUND_DSP_Free@4" (ByVal unit As Long) As Long
 Public Declare Function FSOUND_DSP_SetPriority Lib "fmod.dll" Alias "_FSOUND_DSP_SetPriority@8" (ByVal unit As Long, ByVal Priority As Long) As Long
 Public Declare Function FSOUND_DSP_GetPriority Lib "fmod.dll" Alias "_FSOUND_DSP_GetPriority@4" (ByVal unit As Long) As Long
@@ -736,7 +719,7 @@ Public Declare Function FSOUND_DSP_GetClipAndCopyUnit Lib "fmod.dll" Alias "_FSO
 '   It is off by default to save cpu usage.
 
 
-Public Declare Function FSOUND_DSP_MixBuffers Lib "fmod.dll" Alias "_FSOUND_DSP_MixBuffers@28" (ByVal destbuffer As Long, ByVal srcbuffer As Long, ByVal length As Long, ByVal freq As Long, ByVal Vol As Long, ByVal pan As Long, ByVal mode As Long) As Byte
+Public Declare Function FSOUND_DSP_MixBuffers Lib "fmod.dll" Alias "_FSOUND_DSP_MixBuffers@28" (ByVal destbuffer As Long, ByVal srcbuffer As Long, ByVal Length As Long, ByVal freq As Long, ByVal Vol As Long, ByVal pan As Long, ByVal Mode As Long) As Byte
 Public Declare Function FSOUND_DSP_ClearMixBuffer Lib "fmod.dll" Alias "_FSOUND_DSP_ClearMixBuffer@0" () As Long
 Public Declare Function FSOUND_DSP_GetBufferLength Lib "fmod.dll" Alias "_FSOUND_DSP_GetBufferLength@0" () As Long
 Public Declare Function FSOUND_DSP_GetBufferLengthTotal Lib "fmod.dll" Alias "_FSOUND_DSP_GetBufferLengthTotal@0" () As Long
@@ -752,8 +735,8 @@ Public Declare Function FSOUND_DSP_GetSpectrum Lib "fmod.dll" Alias "_FSOUND_DSP
 'The FSOUND_REVERB_PRESETS have not been included in VB yet so they cannot yet be used here...
 Public Declare Function FSOUND_Reverb_SetProperties Lib "fmod.dll" Alias "_FSOUND_Reverb_SetProperties@4" (ByRef prop As FSOUND_REVERB_PROPERTIES) As Byte
 Public Declare Function FSOUND_Reverb_GetProperties Lib "fmod.dll" Alias "_FSOUND_Reverb_GetProperties@4" (ByRef prop As FSOUND_REVERB_PROPERTIES) As Byte
-Public Declare Function FSOUND_Reverb_SetChannelProperties Lib "fmod.dll" Alias "_FSOUND_Reverb_SetChannelProperties@8" (ByVal channel As Long, ByRef prop As FSOUND_REVERB_CHANNELPROPERTIES) As Byte
-Public Declare Function FSOUND_Reverb_GetChannelProperties Lib "fmod.dll" Alias "_FSOUND_Reverb_GetChannelProperties@8" (ByVal channel As Long, ByRef prop As FSOUND_REVERB_CHANNELPROPERTIES) As Byte
+Public Declare Function FSOUND_Reverb_SetChannelProperties Lib "fmod.dll" Alias "_FSOUND_Reverb_SetChannelProperties@8" (ByVal Channel As Long, ByRef prop As FSOUND_REVERB_CHANNELPROPERTIES) As Byte
+Public Declare Function FSOUND_Reverb_GetChannelProperties Lib "fmod.dll" Alias "_FSOUND_Reverb_GetChannelProperties@8" (ByVal Channel As Long, ByRef prop As FSOUND_REVERB_CHANNELPROPERTIES) As Byte
 
 '/* ===================================================== */
 '/* Recording functions  (ONLY SUPPORTED IN WIN32, WINCE) */
@@ -765,7 +748,7 @@ Public Declare Function FSOUND_Reverb_GetChannelProperties Lib "fmod.dll" Alias 
 
 Public Declare Function FSOUND_Record_SetDriver Lib "fmod.dll" Alias "_FSOUND_Record_SetDriver@4" (ByVal outputtype As Long) As Byte
 Public Declare Function FSOUND_Record_GetNumDrivers Lib "fmod.dll" Alias "_FSOUND_Record_GetNumDrivers@0" () As Long
-Public Declare Function FSOUND_Record_GetDriverName Lib "fmod.dll" Alias "_FSOUND_Record_GetDriverName@4" (ByVal id As Long) As Long
+Public Declare Function FSOUND_Record_GetDriverName Lib "fmod.dll" Alias "_FSOUND_Record_GetDriverName@4" (ByVal ID As Long) As Long
 Public Declare Function FSOUND_Record_GetDriver Lib "fmod.dll" Alias "_FSOUND_Record_GetDriver@0" () As Long
 
 
@@ -784,19 +767,19 @@ Public Declare Function FSOUND_Record_GetPosition Lib "fmod.dll" Alias "_FSOUND_
 '   Song management / playback functions.
 
 
-Public Declare Function FMUSIC_LoadSong Lib "fmod.dll" Alias "_FMUSIC_LoadSong@4" (ByVal name As String) As Long
-Public Declare Function FMUSIC_LoadSongEx Lib "fmod.dll" Alias "_FMUSIC_LoadSongEx@24" (ByVal name As String, ByVal offset As Long, ByVal length As Long, ByVal mode As FSOUND_MODES, ByRef sentencelist As Long, ByVal numitems As Long) As Long
-Public Declare Function FMUSIC_LoadSongEx2 Lib "fmod.dll" Alias "_FMUSIC_LoadSongEx@24" (ByRef data As Byte, ByVal offset As Long, ByVal length As Long, ByVal mode As FSOUND_MODES, ByRef sentencelist As Long, ByVal numitems As Long) As Long
+Public Declare Function FMUSIC_LoadSong Lib "fmod.dll" Alias "_FMUSIC_LoadSong@4" (ByVal Name As String) As Long
+Public Declare Function FMUSIC_LoadSongEx Lib "fmod.dll" Alias "_FMUSIC_LoadSongEx@24" (ByVal Name As String, ByVal offset As Long, ByVal Length As Long, ByVal Mode As FSOUND_MODES, ByRef sentencelist As Long, ByVal numitems As Long) As Long
+Public Declare Function FMUSIC_LoadSongEx2 Lib "fmod.dll" Alias "_FMUSIC_LoadSongEx@24" (ByRef Data As Byte, ByVal offset As Long, ByVal Length As Long, ByVal Mode As FSOUND_MODES, ByRef sentencelist As Long, ByVal numitems As Long) As Long
 Public Declare Function FMUSIC_GetOpenState Lib "fmod.dll" Alias "_FMUSIC_GetOpenState@4" (ByVal module As Long) As Long
 Public Declare Function FMUSIC_FreeSong Lib "fmod.dll" Alias "_FMUSIC_FreeSong@4" (ByVal module As Long) As Byte
 Public Declare Function FMUSIC_PlaySong Lib "fmod.dll" Alias "_FMUSIC_PlaySong@4" (ByVal module As Long) As Byte
 Public Declare Function FMUSIC_StopSong Lib "fmod.dll" Alias "_FMUSIC_StopSong@4" (ByVal module As Long) As Byte
 Public Declare Function FMUSIC_StopAllSongs Lib "fmod.dll" Alias "_FMUSIC_StopAllSongs@0" () As Long
 
-Public Declare Function FMUSIC_SetZxxCallback Lib "fmod.dll" Alias "_FMUSIC_SetZxxCallback@8" (ByVal module As Long, ByVal callback As Long) As Byte
-Public Declare Function FMUSIC_SetRowCallback Lib "fmod.dll" Alias "_FMUSIC_SetRowCallback@12" (ByVal module As Long, ByVal callback As Long, ByVal rowstep As Long) As Byte
-Public Declare Function FMUSIC_SetOrderCallback Lib "fmod.dll" Alias "_FMUSIC_SetOrderCallback@12" (ByVal module As Long, ByVal callback As Long, ByVal rowstep As Long) As Byte
-Public Declare Function FMUSIC_SetInstCallback Lib "fmod.dll" Alias "_FMUSIC_SetInstCallback@12" (ByVal module As Long, ByVal callback As Long, ByVal instrument As Long) As Byte
+Public Declare Function FMUSIC_SetZxxCallback Lib "fmod.dll" Alias "_FMUSIC_SetZxxCallback@8" (ByVal module As Long, ByVal Callback As Long) As Byte
+Public Declare Function FMUSIC_SetRowCallback Lib "fmod.dll" Alias "_FMUSIC_SetRowCallback@12" (ByVal module As Long, ByVal Callback As Long, ByVal rowstep As Long) As Byte
+Public Declare Function FMUSIC_SetOrderCallback Lib "fmod.dll" Alias "_FMUSIC_SetOrderCallback@12" (ByVal module As Long, ByVal Callback As Long, ByVal rowstep As Long) As Byte
+Public Declare Function FMUSIC_SetInstCallback Lib "fmod.dll" Alias "_FMUSIC_SetInstCallback@12" (ByVal module As Long, ByVal Callback As Long, ByVal instrument As Long) As Byte
 
 Public Declare Function FMUSIC_SetSample Lib "fmod.dll" Alias "_FMUSIC_SetSample@12" (ByVal module As Long, ByVal sampno As Long, ByVal sptr As Long) As Byte
 Public Declare Function FMUSIC_SetUserData Lib "fmod.dll" Alias "_FMUSIC_SetUserData@8" (ByVal module As Long, ByVal userdata As Long) As Byte
@@ -808,7 +791,7 @@ Public Declare Function FMUSIC_OptimizeChannels Lib "fmod.dll" Alias "_FMUSIC_Op
 
 Public Declare Function FMUSIC_SetReverb Lib "fmod.dll" Alias "_FMUSIC_SetReverb@4" (ByVal Reverb As Byte) As Byte
 Public Declare Function FMUSIC_SetLooping Lib "fmod.dll" Alias "_FMUSIC_SetLooping@8" (ByVal module As Long, ByVal looping As Byte) As Byte
-Public Declare Function FMUSIC_SetOrder Lib "fmod.dll" Alias "_FMUSIC_SetOrder@8" (ByVal module As Long, ByVal order As Long) As Byte
+Public Declare Function FMUSIC_SetOrder Lib "fmod.dll" Alias "_FMUSIC_SetOrder@8" (ByVal module As Long, ByVal Order As Long) As Byte
 Public Declare Function FMUSIC_SetPaused Lib "fmod.dll" Alias "_FMUSIC_SetPaused@8" (ByVal module As Long, ByVal Pause As Byte) As Byte
 Public Declare Function FMUSIC_SetMasterVolume Lib "fmod.dll" Alias "_FMUSIC_SetMasterVolume@8" (ByVal module As Long, ByVal volume As Long) As Byte
 Public Declare Function FMUSIC_SetMasterSpeed Lib "fmod.dll" Alias "_FMUSIC_SetMasterSpeed@8" (ByVal module As Long, ByVal speed As Single) As Byte
@@ -852,7 +835,7 @@ Public Declare Function FMUSIC_GetUserData Lib "fmod.dll" Alias "_FMUSIC_GetUser
 'Required for GetStringFromPointer
 Private Declare Function ConvCStringToVBString Lib "kernel32" Alias "lstrcpyA" (ByVal lpsz As String, ByVal pt As Long) As Long ' Notice the As Long return value replacing the As String given by the API Viewer.
 'Required for the FFT/Spectral functions
-Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal length As Long)
+Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As Long)
 
 '************
 '* FUNCTIONS (Added by Adion)
