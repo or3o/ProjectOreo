@@ -596,6 +596,14 @@ Begin VB.Form frmEditor_Item
       TabIndex        =   17
       Top             =   120
       Width           =   6255
+      Begin VB.HScrollBar scrlmember 
+         Height          =   255
+         Left            =   1320
+         Max             =   1
+         TabIndex        =   164
+         Top             =   960
+         Width           =   735
+      End
       Begin VB.CheckBox ChkProjectile 
          Alignment       =   1  'Right Justify
          Caption         =   "Projectile?"
@@ -648,13 +656,13 @@ Begin VB.Form frmEditor_Item
          Width           =   2415
       End
       Begin VB.TextBox txtDesc 
-         Height          =   1455
+         Height          =   1335
          Left            =   120
          MaxLength       =   255
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
          TabIndex        =   60
-         Top             =   1800
+         Top             =   1920
          Width           =   2655
       End
       Begin VB.HScrollBar scrlRarity 
@@ -696,10 +704,10 @@ Begin VB.Form frmEditor_Item
          Height          =   300
          ItemData        =   "frmEditor_Item.frx":3412
          Left            =   120
-         List            =   "frmEditor_Item.frx":3443
+         List            =   "frmEditor_Item.frx":3440
          Style           =   2  'Dropdown List
          TabIndex        =   21
-         Top             =   1200
+         Top             =   1320
          Width           =   2655
       End
       Begin VB.TextBox txtName 
@@ -738,6 +746,14 @@ Begin VB.Form frmEditor_Item
          TabIndex        =   18
          Top             =   600
          Width           =   480
+      End
+      Begin VB.Label lblmember 
+         Caption         =   "Members?"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   165
+         Top             =   960
+         Width           =   1095
       End
       Begin VB.Label lblLevelReq 
          AutoSize        =   -1  'True
@@ -779,7 +795,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   120
          TabIndex        =   59
-         Top             =   1560
+         Top             =   1680
          Width           =   975
       End
       Begin VB.Label lblRarity 
@@ -2718,4 +2734,25 @@ errorhandler:
 HandleError "chkSM_Click", "frmEditor_Item", Err.Number, Err.Description, Err.Source, Err.HelpContext
 Err.Clear
 Exit Sub
+End Sub
+Private Sub scrlMember_Change()
+    ' If debug mode, handle error then exit out
+    If options.Debug = 1 Then On Error GoTo errorhandler
+    
+    If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
+    
+    If scrlmember.Value = 1 Then
+    lblmember.Caption = "Member Item: True"
+    Else
+    lblmember.Caption = "Member Item: False"
+    End If
+    
+    Item(EditorIndex).IsMember = scrlmember.Value
+    
+        ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "scrlMember_Change", "frmEditor_Item", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
 End Sub

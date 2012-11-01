@@ -21,6 +21,7 @@ Public MapSounds() As MapSoundRec
 Public MapSoundCount As Long
 Public WeatherParticle(1 To MAX_WEATHER_PARTICLES) As WeatherParticleRec
 Public Autotile() As AutotileRec
+Public AEditor As PlayerRec
 
 ' client-side stuff
 Public ActionMsg(1 To MAX_BYTE) As ActionMsgRec
@@ -149,6 +150,8 @@ Private Type PlayerRec
     AlchemyExp As Long
     Enchants As Byte
     EnchantsExp As Long
+    IsMember As Byte
+    DateCount As String
 End Type
 
 Private Type TileDataRec
@@ -359,7 +362,7 @@ Private Type ItemRec
     Desc As String * 255
     sound As String * NAME_LENGTH
     
-    Pic As Long
+    Pic As Integer
     Type As Byte
     Data1 As Long
     Data2 As Long
@@ -367,12 +370,10 @@ Private Type ItemRec
     ClassReq As Byte
     AccessReq As Byte
     LevelReq As Byte
-    Mastery As Byte
     Price As Long
     Add_Stat(1 To Stats.Stat_Count - 1) As Byte
     Rarity As Byte
     speed As Long
-    Handed As Long
     BindType As Byte
     Stat_Req(1 To Stats.Stat_Count - 1) As Byte
     Animation As Long
@@ -428,6 +429,7 @@ Private Type ItemRec
     Tool As Byte
     ToolReq As Byte
     Recipe(1 To MAX_RECIPE_ITEMS) As Long
+    IsMember As Byte
 End Type
 
 Private Type MapItemRec

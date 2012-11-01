@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmMenu 
    BackColor       =   &H00E0E0E0&
    BorderStyle     =   1  'Fixed Single
-   ClientHeight    =   5280
+   ClientHeight    =   4920
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   7725
@@ -19,7 +19,7 @@ Begin VB.Form frmMenu
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   352
+   ScaleHeight     =   328
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   515
    StartUpPosition =   2  'CenterScreen
@@ -29,12 +29,12 @@ Begin VB.Form frmMenu
       BackColor       =   &H00C0C0C0&
       BorderStyle     =   0  'None
       Height          =   3645
-      Left            =   555
+      Left            =   480
       ScaleHeight     =   243
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   442
       TabIndex        =   16
-      Top             =   180
+      Top             =   120
       Visible         =   0   'False
       Width           =   6630
       Begin VB.PictureBox picSprite 
@@ -240,12 +240,12 @@ Begin VB.Form frmMenu
       BackColor       =   &H00C0C0C0&
       BorderStyle     =   0  'None
       Height          =   3645
-      Left            =   555
+      Left            =   600
       ScaleHeight     =   243
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   442
       TabIndex        =   7
-      Top             =   180
+      Top             =   120
       Visible         =   0   'False
       Width           =   6630
       Begin VB.TextBox txtRPass2 
@@ -473,6 +473,26 @@ Begin VB.Form frmMenu
          TabIndex        =   1
          Top             =   1440
          Width           =   2775
+      End
+      Begin VB.Label Label1 
+         BackStyle       =   0  'Transparent
+         Caption         =   "Server Status:"
+         ForeColor       =   &H00FFFFFF&
+         Height          =   255
+         Left            =   1440
+         TabIndex        =   30
+         Top             =   960
+         Width           =   1335
+      End
+      Begin VB.Label lblsstatus 
+         BackStyle       =   0  'Transparent
+         Caption         =   "Checking..."
+         ForeColor       =   &H00FFFFFF&
+         Height          =   255
+         Left            =   2760
+         TabIndex        =   29
+         Top             =   960
+         Width           =   1575
       End
       Begin VB.Label lblLAccept 
          Alignment       =   2  'Center
@@ -703,6 +723,14 @@ Private Sub imgButton_Click(Index As Integer)
                 picRegister.Visible = False
                 picCharacter.Visible = False
                 picMain.Visible = False
+               'Login checks server status
+                If ConnectToServer(1) Then
+                        lblsstatus.Caption = "Online"
+                        lblsstatus.ForeColor = vbGreen
+                    Else
+                        lblsstatus.Caption = "Offline"
+                        lblsstatus.ForeColor = vbRed
+                End If
                 ' play sound
                 PlaySound Sound_ButtonClick, -1, -1
             End If

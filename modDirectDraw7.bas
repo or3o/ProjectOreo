@@ -7,10 +7,10 @@ Option Explicit
 Private DirectX8 As DirectX8 'The master DirectX object.
 Private Direct3D As Direct3D8 'Controls all things 3D.
 Public Direct3D_Device As Direct3DDevice8 'Represents the hardware rendering.
-Private Direct3DX As D3DX8
+Public Direct3DX As D3DX8
 
 'The 2D (Transformed and Lit) vertex format.
-Private Const FVF_TLVERTEX As Long = D3DFVF_XYZRHW Or D3DFVF_TEX1 Or D3DFVF_DIFFUSE
+Public Const FVF_TLVERTEX As Long = D3DFVF_XYZRHW Or D3DFVF_TEX1 Or D3DFVF_DIFFUSE
 
 'The 2D (Transformed and Lit) vertex format type.
 Public Type TLVERTEX
@@ -121,8 +121,8 @@ Public Function InitDX8() As Boolean
     Direct3D_Window.BackBufferFormat = Display_Mode.Format 'Sets the format that was retrieved into the backbuffer.
     Direct3D_Window.SwapEffect = D3DSWAPEFFECT_COPY
     Direct3D_Window.BackBufferCount = 1 '1 backbuffer only
-    Direct3D_Window.BackBufferWidth = 960 ' frmMain.picScreen.ScaleWidth 'Match the backbuffer width with the display width
-    Direct3D_Window.BackBufferHeight = 768 'frmMain.picScreen.ScaleHeight 'Match the backbuffer height with the display height
+    Direct3D_Window.BackBufferWidth = 800 ' frmMain.picScreen.ScaleWidth 'Match the backbuffer width with the display width
+    Direct3D_Window.BackBufferHeight = 600 'frmMain.picScreen.ScaleHeight 'Match the backbuffer height with the display height
     Direct3D_Window.hDeviceWindow = frmMain.picScreen.hWnd 'Use frmMain as the device window.
     
     'we've already setup for Direct3D_Window.
@@ -142,14 +142,13 @@ Public Function InitDX8() As Boolean
         .SetRenderState D3DRS_CULLMODE, D3DCULL_NONE
         .SetRenderState D3DRS_ZENABLE, False
         .SetRenderState D3DRS_ZWRITEENABLE, False
-        .SetRenderState D3DRS_POINTSPRITE_ENABLE, 1
-        .SetRenderState D3DRS_POINTSCALE_ENABLE, 0
+
         
         .SetTextureStageState 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE
-    
+        .SetRenderState D3DRS_POINTSPRITE_ENABLE, 1
+        .SetRenderState D3DRS_POINTSCALE_ENABLE, 0
         .SetTextureStageState 0, D3DTSS_MAGFILTER, D3DTEXF_POINT
         .SetTextureStageState 0, D3DTSS_MINFILTER, D3DTEXF_POINT
-        ' *** 04/09/2012 DD/MM/YYYY : Disabled MipMapping below. ***
         .SetTextureStageState 0, D3DTSS_MIPFILTER, D3DTEXF_NONE
     End With
     
@@ -201,7 +200,6 @@ Dim i As Long
     Loop
     GetNearestPOT = 2 ^ i
 End Function
-
 Public Sub LoadTexture(ByRef TextureRec As DX8TextureRec)
 Dim SourceBitmap As cGDIpImage, ConvertedBitmap As cGDIpImage, GDIGraphics As cGDIpRenderer, GDIToken As cGDIpToken, i As Long
 Dim newWidth As Long, newHeight As Long, ImageData() As Byte, fn As Long
@@ -275,45 +273,32 @@ Dim i As Long
     Call CheckFogs
     Call CheckProjectiles
     
-    NumTextures = NumTextures + 12
+    NumTextures = NumTextures + 11
     
     ReDim Preserve gTexture(NumTextures)
+    Tex_Shadow.filepath = App.Path & "\data files\graphics\misc\shadow.png"
+    Tex_Shadow.Texture = NumTextures - 10
     Tex_Fade.filepath = App.Path & "\data files\graphics\misc\fader.png"
-    Tex_Fade.Texture = NumTextures - 10
-    'LoadTexture Tex_Fade
+    Tex_Fade.Texture = NumTextures - 9
     Tex_ChatBubble.filepath = App.Path & "\data files\graphics\misc\chatbubble.png"
-    Tex_ChatBubble.Texture = NumTextures - 9
-    'LoadTexture Tex_ChatBubble
+    Tex_ChatBubble.Texture = NumTextures - 8
     Tex_Weather.filepath = App.Path & "\data files\graphics\misc\weather.png"
-    Tex_Weather.Texture = NumTextures - 8
-    'LoadTexture Tex_Weather
+    Tex_Weather.Texture = NumTextures - 7
     Tex_White.filepath = App.Path & "\data files\graphics\misc\white.png"
-    Tex_White.Texture = NumTextures - 7
-    'LoadTexture Tex_White
-    Tex_Door.filepath = App.Path & "\data files\graphics\misc\door.png"
-    Tex_Door.Texture = NumTextures - 6
-    'LoadTexture Tex_Door
+    Tex_White.Texture = NumTextures - 6
     Tex_Direction.filepath = App.Path & "\data files\graphics\misc\direction.png"
     Tex_Direction.Texture = NumTextures - 5
-    'LoadTexture Tex_Direction
     Tex_Target.filepath = App.Path & "\data files\graphics\misc\target.png"
     Tex_Target.Texture = NumTextures - 4
-    'LoadTexture Tex_Target
     Tex_Misc.filepath = App.Path & "\data files\graphics\misc\misc.png"
     Tex_Misc.Texture = NumTextures - 3
-    'LoadTexture Tex_Misc
     Tex_Blood.filepath = App.Path & "\data files\graphics\misc\blood.png"
     Tex_Blood.Texture = NumTextures - 2
-    'LoadTexture Tex_Blood
     Tex_Bars.filepath = App.Path & "\data files\graphics\misc\bars.png"
     Tex_Bars.Texture = NumTextures - 1
-    'LoadTexture Tex_Bars
     Tex_Selection.filepath = App.Path & "\data files\graphics\misc\select.png"
     Tex_Selection.Texture = NumTextures
-    'LoadTexture Tex_Selection
-    Tex_Shadow.filepath = App.Path & "\data files\graphics\misc\shadow.png"
-    Tex_Shadow.Texture = NumTextures - 11
-    'LoadTexture Tex_Shadow
+
     EngineInitFontTextures
     
     ' Error handler
@@ -375,7 +360,6 @@ Dim i As Long
     
     Tex_Misc.Texture = 0
     Tex_Blood.Texture = 0
-    Tex_Door.Texture = 0
     Tex_Direction.Texture = 0
     Tex_Target.Texture = 0
     Tex_Selection.Texture = 0
@@ -396,7 +380,7 @@ Public Sub RenderTexture(ByRef TextureRec As DX8TextureRec, ByVal dX As Single, 
     Dim TextureNum As Long
     Dim textureWidth As Long, textureHeight As Long, sourceX As Single, sourceY As Single, sourceWidth As Single, sourceHeight As Single
     TextureNum = TextureRec.Texture
-    
+
     textureWidth = gTexture(TextureNum).TexWidth
     textureHeight = gTexture(TextureNum).TexHeight
     
@@ -607,7 +591,7 @@ Dim i As Long
 
     With Map.Tile(X, Y)
         For i = MapLayer.Ground To MapLayer.Mask2
-            If Autotile(X, Y).Layer(i).renderState = RenderNormal Then
+            If Autotile(X, Y).Layer(i).renderState = RENDERNORMAL Then
                 ' Draw normally
                 RenderTexture Tex_Tileset(.Layer(i).Tileset), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), .Layer(i).X * 32, .Layer(i).Y * 32, 32, 32, 32, 32, -1
               ElseIf Autotile(X, Y).Layer(i).renderState = RenderAutotile Then
@@ -639,7 +623,7 @@ Dim i As Long
 
     With Map.Tile(X, Y)
         For i = MapLayer.Fringe To MapLayer.Fringe2
-            If Autotile(X, Y).Layer(i).renderState = RenderNormal Then
+            If Autotile(X, Y).Layer(i).renderState = RENDERNORMAL Then
                 ' Draw normally
                 RenderTexture Tex_Tileset(.Layer(i).Tileset), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), .Layer(i).X * 32, .Layer(i).Y * 32, 32, 32, 32, 32, -1
             ElseIf Autotile(X, Y).Layer(i).renderState = RenderAutotile Then
@@ -660,57 +644,6 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DrawDoor(ByVal X As Long, ByVal Y As Long)
-Dim rec As RECT
-Dim x2 As Long, y2 As Long
-    
-    ' If debug mode, handle error then exit out
-    If options.Debug = 1 Then On Error GoTo errorhandler
-
-    ' sort out animation
-    With TempTile(X, Y)
-        If .DoorAnimate = 1 Then ' opening
-            If .DoorTimer + 100 < timeGetTime Then
-                If .DoorFrame < 4 Then
-                    .DoorFrame = .DoorFrame + 1
-                Else
-                    .DoorAnimate = 2 ' set to closing
-                End If
-                .DoorTimer = timeGetTime
-            End If
-        ElseIf .DoorAnimate = 2 Then ' closing
-            If .DoorTimer + 100 < timeGetTime Then
-                If .DoorFrame > 1 Then
-                    .DoorFrame = .DoorFrame - 1
-                Else
-                    .DoorAnimate = 0 ' end animation
-                End If
-                .DoorTimer = timeGetTime
-            End If
-        End If
-        
-        If .DoorFrame = 0 Then .DoorFrame = 1
-    End With
-
-    With rec
-        .Top = 0
-        .Bottom = Tex_Door.Height
-        .Left = ((TempTile(X, Y).DoorFrame - 1) * (Tex_Door.Width / 4))
-        .Right = .Left + (Tex_Door.Width / 4)
-    End With
-
-    x2 = (X * PIC_X)
-    y2 = (Y * PIC_Y) - (Tex_Door.Height / 2) + 4
-    RenderTexture Tex_Door, ConvertMapX(x2), ConvertMapY(y2), rec.Left, rec.Top, rec.Right - rec.Left, rec.Bottom - rec.Top, rec.Right - rec.Left, rec.Bottom - rec.Top, D3DColorRGBA(255, 255, 255, 255)
-    'Call DDS_BackBuffer.DrawFast(ConvertMapX(X2), ConvertMapY(Y2), DDS_Door, rec, DDDrawFAST_WAIT Or DDDrawFAST_SRCCOLORKEY)
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "DrawDoor", "modGraphics", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
 
 Public Sub DrawBlood(ByVal Index As Long)
 Dim rec As RECT
@@ -898,7 +831,6 @@ Dim Resource_state As Long
 Dim Resource_sprite As Long
 Dim rec As RECT
 Dim X As Long, Y As Long
-    
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
 
@@ -937,13 +869,8 @@ Dim X As Long, Y As Long
     ' Set base x + y, then the offset due to size
     X = (MapResource(Resource_num).X * PIC_X) - (Tex_Resource(Resource_sprite).Width / 2) + 16
     Y = (MapResource(Resource_num).Y * PIC_Y) - Tex_Resource(Resource_sprite).Height + 32
-    
     ' render it
-    If Not screenShot Then
         Call DrawResource(Resource_sprite, X, Y, rec)
-    Else
-        Exit Sub
-    End If
     
     ' Error handler
     Exit Sub
@@ -1068,8 +995,9 @@ Dim i As Long, npcNum As Long, partyIndex As Long
         tmpY = GetPlayerY(MyIndex) * PIC_X + Player(MyIndex).yOffset + 35
        
         ' calculate the width to fill
-        barWidth = ((GetPlayerVital(MyIndex, Vitals.HP) / sWidth) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / sWidth)) * sWidth
-       
+         If sWidth > 0 Then
+          barWidth = ((GetPlayerVital(MyIndex, Vitals.HP) / sWidth) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / sWidth)) * sWidth
+         End If
         ' draw bar background
         With sRect
             .Top = sHeight * 1 ' HP bar background
@@ -4513,27 +4441,20 @@ Dim quarterNum As Long
     With Map.Tile(X, Y)
         ' check if the tile can be rendered
         If .Layer(layerNum).Tileset <= 0 Or .Layer(layerNum).Tileset > NumTileSets Then
-            Autotile(X, Y).Layer(layerNum).renderState = RenderNone
+            Autotile(X, Y).Layer(layerNum).renderState = RENDERNONE
             Exit Sub
         End If
         
         ' check if it's a key - hide mask if key is closed
         If layerNum = MapLayer.Mask Then
-            If .Type = TileKey Then
-                If TempTile(X, Y).DoorOpen = NO Then
-                    Autotile(X, Y).Layer(layerNum).renderState = RenderNone
+                    Autotile(X, Y).Layer(layerNum).renderState = RENDERNORMAL
                     Exit Sub
-                Else
-                    Autotile(X, Y).Layer(layerNum).renderState = RenderNormal
-                    Exit Sub
-                End If
-            End If
         End If
         
         ' check if it needs to be rendered as an autotile
         If .Autotile(layerNum) = ATNone Or .Autotile(layerNum) = ATFake Then
             ' default to... default
-            Autotile(X, Y).Layer(layerNum).renderState = RenderNormal
+            Autotile(X, Y).Layer(layerNum).renderState = RENDERNORMAL
         Else
             Autotile(X, Y).Layer(layerNum).renderState = RenderAutotile
             ' cache tileset positioning

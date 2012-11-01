@@ -29,14 +29,14 @@ Begin VB.Form frmEditor_Map
       Caption         =   "Layers"
       Height          =   5415
       Left            =   5760
-      TabIndex        =   15
+      TabIndex        =   13
       Top             =   120
       Width           =   1455
       Begin VB.HScrollBar scrlAutotile 
          Height          =   255
          Left            =   120
          Max             =   5
-         TabIndex        =   93
+         TabIndex        =   90
          Top             =   3960
          Width           =   1215
       End
@@ -44,7 +44,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Fill"
          Height          =   390
          Left            =   120
-         TabIndex        =   19
+         TabIndex        =   17
          Top             =   4800
          Width           =   1215
       End
@@ -53,7 +53,7 @@ Begin VB.Form frmEditor_Map
          Height          =   255
          Index           =   4
          Left            =   120
-         TabIndex        =   22
+         TabIndex        =   20
          Top             =   960
          Width           =   1215
       End
@@ -62,7 +62,7 @@ Begin VB.Form frmEditor_Map
          Height          =   255
          Index           =   2
          Left            =   120
-         TabIndex        =   21
+         TabIndex        =   19
          Top             =   480
          Width           =   1215
       End
@@ -71,7 +71,7 @@ Begin VB.Form frmEditor_Map
          Height          =   255
          Index           =   1
          Left            =   120
-         TabIndex        =   20
+         TabIndex        =   18
          Top             =   240
          Value           =   -1  'True
          Width           =   1215
@@ -81,7 +81,7 @@ Begin VB.Form frmEditor_Map
          Height          =   255
          Index           =   5
          Left            =   120
-         TabIndex        =   18
+         TabIndex        =   16
          Top             =   1200
          Width           =   1215
       End
@@ -90,7 +90,7 @@ Begin VB.Form frmEditor_Map
          Height          =   255
          Index           =   3
          Left            =   120
-         TabIndex        =   17
+         TabIndex        =   15
          Top             =   720
          Width           =   1215
       End
@@ -98,7 +98,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Clear"
          Height          =   375
          Left            =   120
-         TabIndex        =   16
+         TabIndex        =   14
          Top             =   4320
          Width           =   1215
       End
@@ -107,7 +107,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Normal"
          Height          =   255
          Left            =   120
-         TabIndex        =   94
+         TabIndex        =   91
          Top             =   3720
          Width           =   1215
       End
@@ -116,7 +116,7 @@ Begin VB.Form frmEditor_Map
       Caption         =   "Hide Admin"
       Height          =   375
       Left            =   2040
-      TabIndex        =   95
+      TabIndex        =   92
       Top             =   6960
       Width           =   1215
    End
@@ -135,7 +135,7 @@ Begin VB.Form frmEditor_Map
       Left            =   7440
       ScaleHeight     =   7215
       ScaleWidth      =   7095
-      TabIndex        =   28
+      TabIndex        =   26
       Top             =   120
       Visible         =   0   'False
       Width           =   7095
@@ -143,7 +143,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Crafting"
          Height          =   1575
          Left            =   2640
-         TabIndex        =   97
+         TabIndex        =   94
          Top             =   2280
          Visible         =   0   'False
          Width           =   1815
@@ -151,7 +151,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "OK"
             Height          =   375
             Left            =   240
-            TabIndex        =   100
+            TabIndex        =   97
             Top             =   840
             Width           =   1215
          End
@@ -159,7 +159,7 @@ Begin VB.Form frmEditor_Map
             Height          =   255
             Left            =   120
             Max             =   3
-            TabIndex        =   98
+            TabIndex        =   95
             Top             =   480
             Width           =   1455
          End
@@ -167,7 +167,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Type:"
             Height          =   255
             Left            =   240
-            TabIndex        =   99
+            TabIndex        =   96
             Top             =   240
             Width           =   1335
          End
@@ -176,7 +176,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Sound Effect"
          Height          =   1455
          Left            =   1800
-         TabIndex        =   89
+         TabIndex        =   86
          Top             =   2040
          Visible         =   0   'False
          Width           =   3375
@@ -184,7 +184,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Okay"
             Height          =   375
             Left            =   960
-            TabIndex        =   91
+            TabIndex        =   88
             Top             =   840
             Width           =   1455
          End
@@ -194,7 +194,7 @@ Begin VB.Form frmEditor_Map
             Left            =   240
             List            =   "frmEditor_Map.frx":3342
             Style           =   2  'Dropdown List
-            TabIndex        =   90
+            TabIndex        =   87
             Top             =   360
             Width           =   2895
          End
@@ -203,7 +203,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Slide"
          Height          =   1455
          Left            =   1800
-         TabIndex        =   85
+         TabIndex        =   82
          Top             =   2640
          Visible         =   0   'False
          Width           =   3375
@@ -213,7 +213,7 @@ Begin VB.Form frmEditor_Map
             Left            =   240
             List            =   "frmEditor_Map.frx":336D
             Style           =   2  'Dropdown List
-            TabIndex        =   87
+            TabIndex        =   84
             Top             =   360
             Width           =   2895
          End
@@ -221,7 +221,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Okay"
             Height          =   375
             Left            =   960
-            TabIndex        =   86
+            TabIndex        =   83
             Top             =   840
             Width           =   1455
          End
@@ -230,7 +230,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Trap"
          Height          =   1575
          Left            =   1800
-         TabIndex        =   81
+         TabIndex        =   78
          Top             =   2520
          Visible         =   0   'False
          Width           =   3375
@@ -238,7 +238,7 @@ Begin VB.Form frmEditor_Map
             Height          =   255
             Left            =   240
             Max             =   10000
-            TabIndex        =   83
+            TabIndex        =   80
             Top             =   600
             Width           =   2895
          End
@@ -246,7 +246,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Okay"
             Height          =   375
             Left            =   960
-            TabIndex        =   82
+            TabIndex        =   79
             Top             =   960
             Width           =   1455
          End
@@ -254,7 +254,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Amount: 0"
             Height          =   255
             Left            =   240
-            TabIndex        =   84
+            TabIndex        =   81
             Top             =   360
             Width           =   2535
          End
@@ -263,7 +263,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Heal"
          Height          =   1815
          Left            =   1800
-         TabIndex        =   76
+         TabIndex        =   73
          Top             =   2400
          Visible         =   0   'False
          Width           =   3375
@@ -273,7 +273,7 @@ Begin VB.Form frmEditor_Map
             Left            =   240
             List            =   "frmEditor_Map.frx":3392
             Style           =   2  'Dropdown List
-            TabIndex        =   80
+            TabIndex        =   77
             Top             =   240
             Width           =   2895
          End
@@ -281,7 +281,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Okay"
             Height          =   375
             Left            =   960
-            TabIndex        =   78
+            TabIndex        =   75
             Top             =   1200
             Width           =   1455
          End
@@ -289,7 +289,7 @@ Begin VB.Form frmEditor_Map
             Height          =   255
             Left            =   240
             Max             =   10000
-            TabIndex        =   77
+            TabIndex        =   74
             Top             =   840
             Width           =   2895
          End
@@ -297,7 +297,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Amount: 0"
             Height          =   255
             Left            =   240
-            TabIndex        =   79
+            TabIndex        =   76
             Top             =   600
             Width           =   2535
          End
@@ -306,14 +306,14 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Npc Spawn"
          Height          =   2655
          Left            =   1800
-         TabIndex        =   35
+         TabIndex        =   32
          Top             =   2040
          Visible         =   0   'False
          Width           =   3375
          Begin VB.ListBox lstNpc 
             Height          =   780
             Left            =   240
-            TabIndex        =   39
+            TabIndex        =   36
             Top             =   360
             Width           =   2895
          End
@@ -321,7 +321,7 @@ Begin VB.Form frmEditor_Map
             Height          =   255
             Left            =   240
             Max             =   3
-            TabIndex        =   37
+            TabIndex        =   34
             Top             =   1560
             Width           =   2895
          End
@@ -329,7 +329,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Okay"
             Height          =   375
             Left            =   960
-            TabIndex        =   36
+            TabIndex        =   33
             Top             =   2040
             Width           =   1455
          End
@@ -337,7 +337,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Direction: Up"
             Height          =   255
             Left            =   240
-            TabIndex        =   38
+            TabIndex        =   35
             Top             =   1320
             Width           =   2535
          End
@@ -346,7 +346,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Object"
          Height          =   1695
          Left            =   1800
-         TabIndex        =   29
+         TabIndex        =   27
          Top             =   2520
          Visible         =   0   'False
          Width           =   3375
@@ -354,7 +354,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Okay"
             Height          =   375
             Left            =   960
-            TabIndex        =   32
+            TabIndex        =   30
             Top             =   1080
             Width           =   1455
          End
@@ -363,7 +363,7 @@ Begin VB.Form frmEditor_Map
             Left            =   240
             Max             =   100
             Min             =   1
-            TabIndex        =   31
+            TabIndex        =   29
             Top             =   600
             Value           =   1
             Width           =   2895
@@ -372,7 +372,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Object:"
             Height          =   255
             Left            =   240
-            TabIndex        =   30
+            TabIndex        =   28
             Top             =   360
             Width           =   2535
          End
@@ -381,7 +381,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Map Warp"
          Height          =   2775
          Left            =   1800
-         TabIndex        =   58
+         TabIndex        =   55
          Top             =   1920
          Visible         =   0   'False
          Width           =   3375
@@ -389,21 +389,21 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Accept"
             Height          =   375
             Left            =   1080
-            TabIndex        =   65
+            TabIndex        =   62
             Top             =   2160
             Width           =   1215
          End
          Begin VB.HScrollBar scrlMapWarpY 
             Height          =   255
             Left            =   120
-            TabIndex        =   64
+            TabIndex        =   61
             Top             =   1680
             Width           =   3135
          End
          Begin VB.HScrollBar scrlMapWarpX 
             Height          =   255
             Left            =   120
-            TabIndex        =   62
+            TabIndex        =   59
             Top             =   1080
             Width           =   3135
          End
@@ -411,7 +411,7 @@ Begin VB.Form frmEditor_Map
             Height          =   255
             Left            =   120
             Min             =   1
-            TabIndex        =   60
+            TabIndex        =   57
             Top             =   480
             Value           =   1
             Width           =   3135
@@ -420,7 +420,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Y: 0"
             Height          =   255
             Left            =   120
-            TabIndex        =   63
+            TabIndex        =   60
             Top             =   1440
             Width           =   3135
          End
@@ -428,7 +428,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "X: 0"
             Height          =   255
             Left            =   120
-            TabIndex        =   61
+            TabIndex        =   58
             Top             =   840
             Width           =   3135
          End
@@ -436,7 +436,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Map: 1"
             Height          =   255
             Left            =   120
-            TabIndex        =   59
+            TabIndex        =   56
             Top             =   240
             Width           =   3135
          End
@@ -445,7 +445,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Shop"
          Height          =   1335
          Left            =   1920
-         TabIndex        =   66
+         TabIndex        =   63
          Top             =   2640
          Visible         =   0   'False
          Width           =   3135
@@ -453,7 +453,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Accept"
             Height          =   375
             Left            =   960
-            TabIndex        =   68
+            TabIndex        =   65
             Top             =   720
             Width           =   1215
          End
@@ -461,7 +461,7 @@ Begin VB.Form frmEditor_Map
             Height          =   300
             Left            =   120
             Style           =   2  'Dropdown List
-            TabIndex        =   67
+            TabIndex        =   64
             Top             =   240
             Width           =   2895
          End
@@ -470,7 +470,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Key Open"
          Height          =   2055
          Left            =   1800
-         TabIndex        =   52
+         TabIndex        =   49
          Top             =   2400
          Visible         =   0   'False
          Width           =   3375
@@ -478,21 +478,21 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Accept"
             Height          =   375
             Left            =   1080
-            TabIndex        =   57
+            TabIndex        =   54
             Top             =   1440
             Width           =   1215
          End
          Begin VB.HScrollBar scrlKeyY 
             Height          =   255
             Left            =   120
-            TabIndex        =   56
+            TabIndex        =   53
             Top             =   1080
             Width           =   3015
          End
          Begin VB.HScrollBar scrlKeyX 
             Height          =   255
             Left            =   120
-            TabIndex        =   54
+            TabIndex        =   51
             Top             =   480
             Width           =   3015
          End
@@ -500,7 +500,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Y: 0"
             Height          =   255
             Left            =   120
-            TabIndex        =   55
+            TabIndex        =   52
             Top             =   840
             Width           =   3015
          End
@@ -508,7 +508,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "X: 0"
             Height          =   255
             Left            =   120
-            TabIndex        =   53
+            TabIndex        =   50
             Top             =   240
             Width           =   3015
          End
@@ -517,7 +517,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Map Key"
          Height          =   1815
          Left            =   1800
-         TabIndex        =   46
+         TabIndex        =   43
          Top             =   2520
          Visible         =   0   'False
          Width           =   3375
@@ -541,7 +541,7 @@ Begin VB.Form frmEditor_Map
             ScaleHeight     =   32
             ScaleMode       =   3  'Pixel
             ScaleWidth      =   32
-            TabIndex        =   51
+            TabIndex        =   48
             Top             =   600
             Width           =   480
          End
@@ -549,7 +549,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Accept"
             Height          =   375
             Left            =   1080
-            TabIndex        =   50
+            TabIndex        =   47
             Top             =   1320
             Width           =   1215
          End
@@ -557,7 +557,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Take key away upon use."
             Height          =   255
             Left            =   120
-            TabIndex        =   49
+            TabIndex        =   46
             Top             =   960
             Value           =   1  'Checked
             Width           =   2535
@@ -567,7 +567,7 @@ Begin VB.Form frmEditor_Map
             Left            =   120
             Max             =   5
             Min             =   1
-            TabIndex        =   48
+            TabIndex        =   45
             Top             =   600
             Value           =   1
             Width           =   2535
@@ -576,7 +576,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Item: None"
             Height          =   255
             Left            =   120
-            TabIndex        =   47
+            TabIndex        =   44
             Top             =   240
             Width           =   3135
          End
@@ -585,7 +585,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Map Item"
          Height          =   1815
          Left            =   1800
-         TabIndex        =   40
+         TabIndex        =   37
          Top             =   2520
          Visible         =   0   'False
          Width           =   3375
@@ -593,7 +593,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Accept"
             Height          =   375
             Left            =   1200
-            TabIndex        =   45
+            TabIndex        =   42
             Top             =   1200
             Width           =   1215
          End
@@ -601,7 +601,7 @@ Begin VB.Form frmEditor_Map
             Height          =   255
             Left            =   120
             Min             =   1
-            TabIndex        =   44
+            TabIndex        =   41
             Top             =   840
             Value           =   1
             Width           =   2535
@@ -611,7 +611,7 @@ Begin VB.Form frmEditor_Map
             Left            =   120
             Max             =   10
             Min             =   1
-            TabIndex        =   43
+            TabIndex        =   40
             Top             =   480
             Value           =   1
             Width           =   2535
@@ -636,7 +636,7 @@ Begin VB.Form frmEditor_Map
             ScaleHeight     =   32
             ScaleMode       =   3  'Pixel
             ScaleWidth      =   32
-            TabIndex        =   42
+            TabIndex        =   39
             Top             =   600
             Width           =   480
          End
@@ -644,7 +644,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Item: None x0"
             Height          =   255
             Left            =   120
-            TabIndex        =   41
+            TabIndex        =   38
             Top             =   240
             Width           =   3135
          End
@@ -654,7 +654,7 @@ Begin VB.Form frmEditor_Map
       Caption         =   "Cancel"
       Height          =   375
       Left            =   5400
-      TabIndex        =   10
+      TabIndex        =   8
       Top             =   6960
       Width           =   1815
    End
@@ -662,7 +662,7 @@ Begin VB.Form frmEditor_Map
       Caption         =   "Properties"
       Height          =   375
       Left            =   120
-      TabIndex        =   12
+      TabIndex        =   10
       Top             =   6960
       Width           =   1815
    End
@@ -670,7 +670,7 @@ Begin VB.Form frmEditor_Map
       Caption         =   "Type"
       Height          =   1335
       Left            =   5760
-      TabIndex        =   24
+      TabIndex        =   22
       Top             =   5520
       Width           =   1455
       Begin VB.OptionButton optEvent 
@@ -678,7 +678,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Events"
          Height          =   255
          Left            =   360
-         TabIndex        =   88
+         TabIndex        =   85
          Top             =   960
          Width           =   855
       End
@@ -687,7 +687,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Block"
          Height          =   255
          Left            =   480
-         TabIndex        =   71
+         TabIndex        =   68
          Top             =   720
          Width           =   735
       End
@@ -696,7 +696,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Attributes"
          Height          =   255
          Left            =   120
-         TabIndex        =   26
+         TabIndex        =   24
          Top             =   480
          Width           =   1095
       End
@@ -705,7 +705,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Layers"
          Height          =   255
          Left            =   360
-         TabIndex        =   25
+         TabIndex        =   23
          Top             =   240
          Value           =   -1  'True
          Width           =   855
@@ -714,7 +714,7 @@ Begin VB.Form frmEditor_Map
    Begin VB.HScrollBar scrlPictureX 
       Height          =   255
       Left            =   120
-      TabIndex        =   23
+      TabIndex        =   21
       Top             =   5400
       Width           =   5295
    End
@@ -735,7 +735,7 @@ Begin VB.Form frmEditor_Map
       ScaleHeight     =   352
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   352
-      TabIndex        =   14
+      TabIndex        =   12
       Top             =   120
       Width           =   5280
    End
@@ -743,7 +743,7 @@ Begin VB.Form frmEditor_Map
       Height          =   5295
       Left            =   5400
       Max             =   255
-      TabIndex        =   13
+      TabIndex        =   11
       Top             =   120
       Width           =   255
    End
@@ -769,7 +769,7 @@ Begin VB.Form frmEditor_Map
       Caption         =   "Send"
       Height          =   375
       Left            =   3480
-      TabIndex        =   11
+      TabIndex        =   9
       Top             =   6960
       Width           =   1815
    End
@@ -785,104 +785,87 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Water"
          Height          =   255
          Left            =   120
-         TabIndex        =   101
-         Top             =   4080
+         TabIndex        =   98
+         Top             =   3360
          Width           =   1095
       End
       Begin VB.OptionButton optCraft 
          Caption         =   "Craft"
          Height          =   300
          Left            =   120
-         TabIndex        =   96
-         Top             =   3840
+         TabIndex        =   93
+         Top             =   3120
          Width           =   735
       End
       Begin VB.OptionButton optSound 
          Caption         =   "Sound"
          Height          =   270
          Left            =   120
-         TabIndex        =   92
-         Top             =   3600
+         TabIndex        =   89
+         Top             =   2880
          Width           =   1215
       End
       Begin VB.OptionButton optSlide 
          Caption         =   "Slide"
          Height          =   270
          Left            =   120
-         TabIndex        =   75
-         Top             =   3360
+         TabIndex        =   72
+         Top             =   2640
          Width           =   1215
       End
       Begin VB.OptionButton optTrap 
          Caption         =   "Trap"
          Height          =   270
          Left            =   120
-         TabIndex        =   74
-         Top             =   3120
+         TabIndex        =   71
+         Top             =   2400
          Width           =   1215
       End
       Begin VB.OptionButton optHeal 
          Caption         =   "Heal"
          Height          =   270
          Left            =   120
-         TabIndex        =   73
-         Top             =   2880
+         TabIndex        =   70
+         Top             =   2160
          Width           =   1215
       End
       Begin VB.OptionButton optBank 
          Caption         =   "Bank"
          Height          =   270
          Left            =   120
-         TabIndex        =   72
-         Top             =   2640
+         TabIndex        =   69
+         Top             =   1920
          Width           =   1215
       End
       Begin VB.OptionButton optShop 
          Caption         =   "Shop"
          Height          =   270
          Left            =   120
-         TabIndex        =   69
-         Top             =   2400
+         TabIndex        =   66
+         Top             =   1680
          Width           =   1215
       End
       Begin VB.OptionButton optNpcSpawn 
          Caption         =   "Npc Spawn"
          Height          =   270
          Left            =   120
-         TabIndex        =   34
-         Top             =   2160
-         Width           =   1215
-      End
-      Begin VB.OptionButton optDoor 
-         Caption         =   "Door"
-         Enabled         =   0   'False
-         Height          =   255
-         Left            =   120
-         TabIndex        =   33
-         Top             =   1920
+         TabIndex        =   31
+         Top             =   1440
          Width           =   1215
       End
       Begin VB.OptionButton optResource 
          Caption         =   "Resource"
          Height          =   240
          Left            =   120
-         TabIndex        =   27
-         Top             =   1680
-         Width           =   1215
-      End
-      Begin VB.OptionButton optKeyOpen 
-         Caption         =   "Key Open"
-         Height          =   240
-         Left            =   120
-         TabIndex        =   9
-         Top             =   1440
+         TabIndex        =   25
+         Top             =   1200
          Width           =   1215
       End
       Begin VB.OptionButton optBlocked 
          Caption         =   "Blocked"
          Height          =   255
          Left            =   120
-         TabIndex        =   8
+         TabIndex        =   7
          Top             =   240
          Value           =   -1  'True
          Width           =   1215
@@ -891,7 +874,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Warp"
          Height          =   255
          Left            =   120
-         TabIndex        =   7
+         TabIndex        =   6
          Top             =   480
          Width           =   1215
       End
@@ -899,7 +882,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Clear"
          Height          =   390
          Left            =   120
-         TabIndex        =   6
+         TabIndex        =   5
          Top             =   4920
          Width           =   1215
       End
@@ -907,7 +890,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Item"
          Height          =   270
          Left            =   120
-         TabIndex        =   5
+         TabIndex        =   4
          Top             =   720
          Width           =   1215
       End
@@ -915,16 +898,8 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Npc Avoid"
          Height          =   270
          Left            =   120
-         TabIndex        =   4
-         Top             =   960
-         Width           =   1215
-      End
-      Begin VB.OptionButton optKey 
-         Caption         =   "Key"
-         Height          =   270
-         Left            =   120
          TabIndex        =   3
-         Top             =   1200
+         Top             =   960
          Width           =   1215
       End
    End
@@ -942,7 +917,7 @@ Begin VB.Form frmEditor_Map
       EndProperty
       Height          =   255
       Left            =   120
-      TabIndex        =   70
+      TabIndex        =   67
       Top             =   5760
       Width           =   5535
    End

@@ -54,7 +54,6 @@ Public Enum ServerPackets
     SResourceEditor
     SUpdateResource
     SSendPing
-    SDoorAnimation
     SActionMsg
     SPlayerEXP
     SBlood
@@ -274,10 +273,7 @@ Public Enum TileType
     TileWarp
     TileItem
     TileNPCAvoid
-    TileKey
-    TileKeyOPEN
     TileResource
-    TileDoor
     TileNPCSpawn
     TileShop
     TileBank
@@ -318,7 +314,6 @@ Public Enum ItemType
     ItemEnchant
     ItemShield
     ItemConsume
-    ItemKey
     ItemCurrency
     ItemSpell
     ItemRecipe
@@ -326,8 +321,9 @@ End Enum
 
 ' Map Morals
 Public Enum MapMoral
-    MoralNone = 0
-    MoralSafe
+    moralnone = 0
+    moralsafe
+    moralmember
 End Enum
 
 ' Chat Log Enumerations
@@ -580,8 +576,8 @@ End Enum
 
 'Rendering Types
 Public Enum RenderType
-    RenderNone = 0
-    RenderNormal
+    RENDERNONE = 0
+    RENDERNORMAL
     RenderAutotile
 End Enum
 

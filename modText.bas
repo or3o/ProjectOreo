@@ -417,14 +417,8 @@ Public Function DrawMapAttributes()
                                 RenderText Font_Default, "I", tx, ty, White, 0
                             Case TileNPCAvoid
                                 RenderText Font_Default, "N", tx, ty, White, 0
-                            Case TileKey
-                                RenderText Font_Default, "K", tx, ty, White, 0
-                            Case TileKeyOPEN
-                                RenderText Font_Default, "O", tx, ty, White, 0
                             Case TileResource
                                 RenderText Font_Default, "B", tx, ty, Green, 0
-                            Case TileDoor
-                                RenderText Font_Default, "D", tx, ty, Brown, 0
                             Case TileNPCSpawn
                                 RenderText Font_Default, "S", tx, ty, Yellow, 0
                             Case TileShop

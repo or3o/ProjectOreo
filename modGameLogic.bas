@@ -733,15 +733,6 @@ Dim i As Long
         Exit Function
     End If
 
-    ' Check to see if the key door is open or not
-    If Map.Tile(X, Y).Type = TileKey Then
-
-        ' This actually checks if its open or not
-        If TempTile(X, Y).DoorOpen = NO Then
-            CheckDirection = True
-            Exit Function
-        End If
-    End If
     
     ' Check to see if a player is already on that tile
     For i = 1 To Player_HighIndex
@@ -869,12 +860,14 @@ Public Sub UpdateDrawMapName()
     DrawMapNameY = 1
 
     Select Case Map.Moral
-        Case MoralNone
-            DrawMapNameColor = BrightRed
-        Case MoralSafe
-            DrawMapNameColor = White
+        Case moralnone
+            DrawMapNameColor = QBColor(BrightRed)
+        Case moralsafe
+            DrawMapNameColor = QBColor(White)
+        Case moralmember
+            DrawMapNameColor = QBColor(Yellow)
         Case Else
-            DrawMapNameColor = White
+            DrawMapNameColor = QBColor(White)
     End Select
 
     ' Error handler

@@ -159,7 +159,7 @@ errorhandler:
 End Sub
 
 Public Sub MapEditorSetTile(ByVal X As Long, ByVal Y As Long, ByVal CurLayer As Long, Optional ByVal multitile As Boolean = False, Optional ByVal theAutotile As Byte = 0)
-Dim X2 As Long, Y2 As Long
+Dim x2 As Long, y2 As Long
 
     ' If debug mode, handle error then exit out
     If options.Debug = 1 Then On Error GoTo errorhandler
@@ -188,24 +188,24 @@ Dim X2 As Long, Y2 As Long
             CacheRenderState X, Y, CurLayer
         End With
     Else ' multitile
-        Y2 = 0 ' starting tile for y axis
+        y2 = 0 ' starting tile for y axis
         For Y = CurY To CurY + EditorTileHeight - 1
-            X2 = 0 ' re-set x count every y loop
+            x2 = 0 ' re-set x count every y loop
             For X = CurX To CurX + EditorTileWidth - 1
                 If X >= 0 And X <= Map.MaxX Then
                     If Y >= 0 And Y <= Map.MaxY Then
                         With Map.Tile(X, Y)
-                            .Layer(CurLayer).X = EditorTileX + X2
-                            .Layer(CurLayer).Y = EditorTileY + Y2
+                            .Layer(CurLayer).X = EditorTileX + x2
+                            .Layer(CurLayer).Y = EditorTileY + y2
                             .Layer(CurLayer).Tileset = frmEditor_Map.scrlTileSet.Value
                             .Autotile(CurLayer) = 0
                             CacheRenderState X, Y, CurLayer
                         End With
                     End If
                 End If
-                X2 = X2 + 1
+                x2 = x2 + 1
             Next
-            Y2 = Y2 + 1
+            y2 = y2 + 1
         Next
     End If
     
@@ -279,22 +279,6 @@ Dim tmpDir As Byte
                     .Data3 = 0
                     .Data4 = ""
                 End If
-                ' key
-                If frmEditor_Map.optKey.Value Then
-                    .Type = TileKey
-                    .Data1 = KeyEditorNum
-                    .Data2 = KeyEditorTake
-                    .Data3 = 0
-                    .Data4 = ""
-                End If
-                ' key open
-                If frmEditor_Map.optKeyOpen.Value Then
-                    .Type = TileKeyOPEN
-                    .Data1 = KeyOpenEditorX
-                    .Data2 = KeyOpenEditorY
-                    .Data3 = 0
-                    .Data4 = ""
-                End If
                 ' resource
                 If frmEditor_Map.optResource.Value Then
                     .Type = TileResource
@@ -304,13 +288,6 @@ Dim tmpDir As Byte
                     .Data4 = ""
                 End If
                 ' door
-                If frmEditor_Map.optDoor.Value Then
-                    .Type = TileDoor
-                    .Data1 = EditorWarpMap
-                    .Data2 = EditorWarpX
-                    .Data3 = EditorWarpY
-                    .Data4 = ""
-                End If
                 ' npc spawn
                 If frmEditor_Map.optNpcSpawn.Value Then
                     .Type = TileNPCSpawn
@@ -762,10 +739,10 @@ Dim CraftIndex As Long
             frmEditor_Item.ScrlDagPdoll.Visible = True
             frmEditor_Item.lblDagPdoll.Visible = False
         End If
-
-frmEditor_Item.ScrlDagPdoll.Value = Item(EditorIndex).Daggerpdoll
-    End With
-End If
+            
+            frmEditor_Item.ScrlDagPdoll.Value = Item(EditorIndex).Daggerpdoll
+            End With
+         End If
         Else
             frmEditor_Item.fraEquipment.Visible = False
             frmEditor_Item.Fraprojectile.Visible = False
@@ -918,7 +895,7 @@ End If
         frmEditor_Item.scrlPrice.Value = .Price
         frmEditor_Item.cmbBind.ListIndex = .BindType
         frmEditor_Item.scrlRarity.Value = .Rarity
-         
+        frmEditor_Item.scrlmember = .IsMember
         EditorIndex = frmEditor_Item.lstIndex.ListIndex + 1
     End With
     

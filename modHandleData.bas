@@ -70,7 +70,6 @@ Public Sub InitMessages()
     HandleDataSub(SResourceEditor) = GetAddress(AddressOf HandleResourceEditor)
     HandleDataSub(SUpdateResource) = GetAddress(AddressOf HandleUpdateResource)
     HandleDataSub(SSendPing) = GetAddress(AddressOf HandleSendPing)
-    HandleDataSub(SDoorAnimation) = GetAddress(AddressOf HandleDoorAnimation)
     HandleDataSub(SActionMsg) = GetAddress(AddressOf HandleActionMsg)
     HandleDataSub(SPlayerEXP) = GetAddress(AddressOf HandlePlayerExp)
     HandleDataSub(SBlood) = GetAddress(AddressOf HandleBlood)
@@ -2215,6 +2214,9 @@ Dim Slot As Long
     Buffer.WriteBytes Data()
     
     Slot = Buffer.ReadLong
+    If SpellCD(Slot) = 0 Then
+     Exit Sub
+    End If
     SpellCD(Slot) = timeGetTime
     
     

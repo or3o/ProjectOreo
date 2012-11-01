@@ -364,7 +364,7 @@ Begin VB.Form frmEditor_MapProperties
          Height          =   315
          ItemData        =   "frmMapProperties.frx":0049
          Left            =   960
-         List            =   "frmMapProperties.frx":0053
+         List            =   "frmMapProperties.frx":0056
          Style           =   2  'Dropdown List
          TabIndex        =   14
          Top             =   360
@@ -515,13 +515,13 @@ Option Explicit
 
 Private Sub chkDoNotAutoSpawn_Click()
     If lstNpcs.ListIndex > -1 Then
-        Map.NpcSpawnType(lstNpcs.ListIndex + 1) = chkDoNotAutoSpawn.value
+        Map.NpcSpawnType(lstNpcs.ListIndex + 1) = chkDoNotAutoSpawn.Value
     End If
 End Sub
 
 Private Sub cmdPlay_Click()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
     StopMusic
     PlayMusic lstMusic.List(lstMusic.ListIndex)
@@ -536,7 +536,7 @@ End Sub
 
 Private Sub cmdStop_Click()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
     StopMusic
     
@@ -551,22 +551,22 @@ End Sub
 Private Sub cmdOk_Click()
     Dim i As Long
     Dim sTemp As Long
-    Dim x As Long, x2 As Long
-    Dim y As Long, y2 As Long
+    Dim X As Long, x2 As Long
+    Dim Y As Long, y2 As Long
     Dim tempArr() As TileRec
     
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
 
-    If Not IsNumeric(txtMaxX.Text) Then txtMaxX.Text = Map.MaxX
-    If Val(txtMaxX.Text) < MAX_MAPX Then txtMaxX.Text = MAX_MAPX
-    If Val(txtMaxX.Text) > MAX_BYTE Then txtMaxX.Text = MAX_BYTE
-    If Not IsNumeric(txtMaxY.Text) Then txtMaxY.Text = Map.MaxY
-    If Val(txtMaxY.Text) < MAX_MAPY Then txtMaxY.Text = MAX_MAPY
-    If Val(txtMaxY.Text) > MAX_BYTE Then txtMaxY.Text = MAX_BYTE
+    If Not IsNumeric(txtMaxX.text) Then txtMaxX.text = Map.MaxX
+    If Val(txtMaxX.text) < MAX_MAPX Then txtMaxX.text = MAX_MAPX
+    If Val(txtMaxX.text) > MAX_BYTE Then txtMaxX.text = MAX_BYTE
+    If Not IsNumeric(txtMaxY.text) Then txtMaxY.text = Map.MaxY
+    If Val(txtMaxY.text) < MAX_MAPY Then txtMaxY.text = MAX_MAPY
+    If Val(txtMaxY.text) > MAX_BYTE Then txtMaxY.text = MAX_BYTE
 
     With Map
-        .name = Trim$(txtName.Text)
+        .Name = Trim$(txtName.text)
         If lstMusic.ListIndex >= 0 Then
             .Music = lstMusic.List(lstMusic.ListIndex)
         Else
@@ -577,42 +577,42 @@ Private Sub cmdOk_Click()
         Else
             .BGS = vbNullString
         End If
-        .Up = Val(txtUp.Text)
-        .Down = Val(txtDown.Text)
-        .Left = Val(txtLeft.Text)
-        .Right = Val(txtRight.Text)
+        .Up = Val(txtUp.text)
+        .Down = Val(txtDown.text)
+        .Left = Val(txtLeft.text)
+        .Right = Val(txtRight.text)
         .Moral = cmbMoral.ListIndex
-        .BootMap = Val(txtBootMap.Text)
-        .BootX = Val(txtBootX.Text)
-        .BootY = Val(txtBootY.Text)
+        .BootMap = Val(txtBootMap.text)
+        .BootX = Val(txtBootX.text)
+        .BootY = Val(txtBootY.text)
         
         .Weather = CmbWeather.ListIndex
-        .WeatherIntensity = scrlWeatherIntensity.value
+        .WeatherIntensity = scrlWeatherIntensity.Value
         
-        .Fog = ScrlFog.value
-        .FogSpeed = ScrlFogSpeed.value
-        .FogOpacity = scrlFogOpacity.value
+        .Fog = ScrlFog.Value
+        .FogSpeed = ScrlFogSpeed.Value
+        .FogOpacity = scrlFogOpacity.Value
         
-        .Red = ScrlR.value
-        .Green = ScrlG.value
-        .Blue = ScrlB.value
-        .Alpha = scrlA.value
+        .Red = ScrlR.Value
+        .Green = ScrlG.Value
+        .Blue = ScrlB.Value
+        .Alpha = scrlA.Value
         
         ' set the data before changing it
         tempArr = Map.Tile
         x2 = Map.MaxX
         y2 = Map.MaxY
         ' change the data
-        .MaxX = Val(txtMaxX.Text)
-        .MaxY = Val(txtMaxY.Text)
+        .MaxX = Val(txtMaxX.text)
+        .MaxY = Val(txtMaxY.text)
         ReDim Map.Tile(0 To .MaxX, 0 To .MaxY)
 
         If x2 > .MaxX Then x2 = .MaxX
         If y2 > .MaxY Then y2 = .MaxY
 
-        For x = 0 To x2
-            For y = 0 To y2
-                .Tile(x, y) = tempArr(x, y)
+        For X = 0 To x2
+            For Y = 0 To y2
+                .Tile(X, Y) = tempArr(X, Y)
             Next
         Next
 
@@ -633,7 +633,7 @@ End Sub
 
 Private Sub cmdCancel_Click()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
     Unload frmEditor_MapProperties
     
@@ -650,7 +650,7 @@ Dim tmpString() As String
 Dim npcNum As Long
 
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
 
     ' exit out if needed
     If Not cmbNpc.ListCount > 0 Then Exit Sub
@@ -659,8 +659,8 @@ Dim npcNum As Long
     ' set the combo box properly
     tmpString = Split(lstNpcs.List(lstNpcs.ListIndex))
     npcNum = CLng(Left$(tmpString(0), Len(tmpString(0)) - 1))
-    cmbNpc.ListIndex = Map.Npc(npcNum)
-    chkDoNotAutoSpawn.value = Map.NpcSpawnType(npcNum)
+    cmbNpc.ListIndex = Map.NPC(npcNum)
+    chkDoNotAutoSpawn.Value = Map.NpcSpawnType(npcNum)
     
     ' Error handler
     Exit Sub
@@ -673,10 +673,10 @@ End Sub
 Private Sub cmbNpc_Click()
 Dim tmpString() As String
 Dim npcNum As Long
-Dim x As Long, tmpIndex As Long
+Dim X As Long, tmpIndex As Long
 
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
     ' exit out if needed
     If Not cmbNpc.ListCount > 0 Then Exit Sub
@@ -687,19 +687,19 @@ Dim x As Long, tmpIndex As Long
     ' make sure it's not a clear
     If Not cmbNpc.List(cmbNpc.ListIndex) = "No NPC" Then
         npcNum = CLng(Left$(tmpString(0), Len(tmpString(0)) - 1))
-        Map.Npc(lstNpcs.ListIndex + 1) = npcNum
+        Map.NPC(lstNpcs.ListIndex + 1) = npcNum
     Else
-        Map.Npc(lstNpcs.ListIndex + 1) = 0
+        Map.NPC(lstNpcs.ListIndex + 1) = 0
     End If
     
     ' re-load the list
     tmpIndex = lstNpcs.ListIndex
     lstNpcs.Clear
-    For x = 1 To MAX_MAP_NPCS
-        If Map.Npc(x) > 0 Then
-        lstNpcs.AddItem x & ": " & Trim$(Npc(Map.Npc(x)).name)
+    For X = 1 To MAX_MAP_NPCS
+        If Map.NPC(X) > 0 Then
+        lstNpcs.AddItem X & ": " & Trim$(NPC(Map.NPC(X)).Name)
         Else
-            lstNpcs.AddItem x & ": No NPC"
+            lstNpcs.AddItem X & ": No NPC"
         End If
     Next
     lstNpcs.ListIndex = tmpIndex
@@ -714,9 +714,9 @@ End Sub
 
 Private Sub scrlA_Change()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblA.Caption = "Opacity: " & scrlA.value
+    lblA.Caption = "Opacity: " & scrlA.Value
     
     ' Error handler
     Exit Sub
@@ -728,9 +728,9 @@ End Sub
 
 Private Sub ScrlB_Change()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblB.Caption = "Blue: " & ScrlB.value
+    lblB.Caption = "Blue: " & ScrlB.Value
     
     ' Error handler
     Exit Sub
@@ -742,12 +742,12 @@ End Sub
 
 Private Sub ScrlFog_Change()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
-    If ScrlFog.value = 0 Then
+    If ScrlFog.Value = 0 Then
         lblFog.Caption = "None."
     Else
-        lblFog.Caption = "Fog: " & ScrlFog.value
+        lblFog.Caption = "Fog: " & ScrlFog.Value
     End If
 
     ' Error handler
@@ -760,9 +760,9 @@ End Sub
 
 Private Sub scrlFogOpacity_Change()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblFogOpacity.Caption = "Fog Opacity: " & scrlFogOpacity.value
+    lblFogOpacity.Caption = "Fog Opacity: " & scrlFogOpacity.Value
     
     ' Error handler
     Exit Sub
@@ -774,9 +774,9 @@ End Sub
 
 Private Sub ScrlFogSpeed_Change()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblFogSpeed.Caption = "Fog Speed: " & ScrlFogSpeed.value
+    lblFogSpeed.Caption = "Fog Speed: " & ScrlFogSpeed.Value
     
     ' Error handler
     Exit Sub
@@ -788,9 +788,9 @@ End Sub
 
 Private Sub ScrlG_Change()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblG.Caption = "Green: " & ScrlG.value
+    lblG.Caption = "Green: " & ScrlG.Value
     
     ' Error handler
     Exit Sub
@@ -802,9 +802,9 @@ End Sub
 
 Private Sub ScrlR_Change()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblR.Caption = "Red: " & ScrlR.value
+    lblR.Caption = "Red: " & ScrlR.Value
     
     ' Error handler
     Exit Sub
@@ -816,9 +816,9 @@ End Sub
 
 Private Sub scrlWeatherIntensity_Change()
     ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
+    If options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblWeatherIntensity.Caption = "Intensity: " & scrlWeatherIntensity.value
+    lblWeatherIntensity.Caption = "Intensity: " & scrlWeatherIntensity.Value
     
     ' Error handler
     Exit Sub
